@@ -51,11 +51,13 @@
       <div class="starter-template">
         <h1>APP Screenshot Size Generator</h1>
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-        <canvas id="previewCanvas" width="200" height="100" style="border:1px solid #000000;">
+        <canvas id="previewCanvas" width="200" height="200" style="border:1px solid #000000;">
         </canvas>
         <button type="button" class="btn btn-primary" onclick="loadImg()">Load Image</button>
 
+        <input type="file" onchange="onFileSelected(event)">
 
+        <img id="loadedimage" height="1000">
       </canvas>
       
       </div>
