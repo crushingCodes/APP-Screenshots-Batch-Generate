@@ -56,10 +56,14 @@
         <button type="button" class="btn btn-primary" onclick="loadImg()">Load Image</button>
 
         <input type="file" onchange="onFileSelected(event)">
+        <div id="image-outer">
+          <img id="loadedimage" height="100">
 
-        <img id="loadedimage" height="1000">
+        </div>
       </canvas>
       
+      <a id="downloadLnk" download="YourFileName.jpg">Download as image</a>
+
       </div>
 
     </div><!-- /.container -->
