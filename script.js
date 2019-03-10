@@ -43,18 +43,19 @@ function onFileSelected(event) {
       var imageObject={fileName:img.title ,width:img.naturalWidth,height:img.naturalHeight};
       if(imageObject.width>=imageObject.height){
         imageObject["orientation"]=orientation.landscape;
-        targetHeight=sizeProfiles["portrait5.5"].height;
-        targetWidth=sizeProfiles["portrait5.5"].width;
-      }else{
-        imageObject["orientation"]=orientation.portrait;
         targetHeight=sizeProfiles["landscape5.5"].height;
         targetWidth=sizeProfiles["landscape5.5"].width;
+
+      }else{
+        imageObject["orientation"]=orientation.portrait;
+        targetHeight=sizeProfiles["portrait5.5"].height;
+        targetWidth=sizeProfiles["portrait5.5"].width;
       }
 
    // ctx.drawImage(img,0,0,100,180);
-   ctx.height=targetHeight;
-   ctx.width=targetWidth;
-    ctx.drawImage(img,0,0,targetHeight,targetWidth);
+   canvas.height=targetHeight;
+   canvas.width=targetWidth;
+    ctx.drawImage(img,0,0,targetWidth,targetHeight);
 
       images[imageObject.fileName]=imageObject;
       console.log(images);
