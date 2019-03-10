@@ -3,8 +3,18 @@
 
  //Create a enum like object to easily reference desired platforms
  const osTypes={ios:"ios",android:"android"};
- Object.freeze(osTypes)
- var folders=[];
+ Object.freeze(osTypes);
+ const orientation={portrait:"portrait",landscape:"landscape"};
+ Object.freeze(orientation);
+ //  1242 x 2208 pixels (portrait)
+    //  2208 x 1242 pixels (landscape
+ const sizeProfiles={
+   "portrait5.5": {height:2208,width:1242},
+   "landscape5.5": {height:1242,width:2208}
+};
+
+ var images={};
+ var folders={};
 
 
 window.onload = function(){
@@ -19,6 +29,7 @@ window.onload = function(){
 };
 
 function onFileSelected(event) {
+  var targetWidth=0,targetHeight=0;
   //Triggered after file selected
     var selectedFile = event.target.files[0];
     var reader = new FileReader();
@@ -28,8 +39,25 @@ function onFileSelected(event) {
   
     reader.onload = function(event) {
       img.src = event.target.result;
-      ctx.drawImage(img,0,0,100,180);
        
+      var imageObject={fileName:img.title ,width:img.naturalWidth,height:img.naturalHeight};
+      if(imageObject.width>=imageObject.height){
+        imageObject["orientation"]=orientation.landscape;
+        targetHeight=sizeProfiles["portrait5.5"].height;
+        targetWidth=sizeProfiles["portrait5.5"].width;
+      }else{
+        imageObject["orientation"]=orientation.portrait;
+        targetHeight=sizeProfiles["landscape5.5"].height;
+        targetWidth=sizeProfiles["landscape5.5"].width;
+      }
+
+   // ctx.drawImage(img,0,0,100,180);
+   ctx.height=targetHeight;
+   ctx.width=targetWidth;
+    ctx.drawImage(img,0,0,targetHeight,targetWidth);
+
+      images[imageObject.fileName]=imageObject;
+      console.log(images);
     };
   
     reader.readAsDataURL(selectedFile);
@@ -42,7 +70,6 @@ function initZip(){
   initZipFolders();
 }
 function initZipFolders(){
-  console.log(osTypes);
 //For each defined os defined u osTypes
   Object.entries(osTypes).forEach(os => {
     let value = os[1];
