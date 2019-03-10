@@ -1,11 +1,10 @@
 
- var canvas;
- var ctx;
+ var canvas,ctx,zip;
 
- var zip;
- var osTypes=[{"ios":"ios"},{"android":"android"}];
- var folders;
-console.log("Hello World");
+ //Create a enum like object to easily reference desired platforms
+ const osTypes={ios:"ios",android:"android"};
+ Object.freeze(osTypes)
+ var folders=[];
 
 
 window.onload = function(){
@@ -15,28 +14,22 @@ window.onload = function(){
     ctx.moveTo(0, 0);
     //Get the canvas to init
     ctx.stroke();
+    initZip();
 
 };
-    //downloadLnk.addEventListener('click', download, false);
-  //   function download() {
-  //     var dt = canvas.toDataURL('image/jpeg');
-  //     this.href = dt;
-  // };
 
 function onFileSelected(event) {
+  //Triggered after file selected
     var selectedFile = event.target.files[0];
     var reader = new FileReader();
-  
+  //Reference an invisible element just to get the image accessable
     var img = document.getElementById("loadedimage");
     img.title = selectedFile.name;
   
     reader.onload = function(event) {
       img.src = event.target.result;
-
-      //ctx.drawImage(imgtag, 0, 0);
       ctx.drawImage(img,0,0,100,180);
-      addToZip(img,"default",osTypes["android"]);
-      downloadAsZip();
+       
     };
   
     reader.readAsDataURL(selectedFile);
@@ -46,22 +39,25 @@ function initZip(){
   //JSZip.js Library
    zip = new JSZip();
   zip.file("Hello.txt", "Thank you for using APP Screenshot Generator\n");
- //  imgFolder = zip.folder("images");
   initZipFolders();
 }
 function initZipFolders(){
-  for(var os of osTypes){
-    folders[os]= zip.folder(osTypes);
-  }
+  console.log(osTypes);
+//For each defined os defined u osTypes
+  Object.entries(osTypes).forEach(os => {
+    let value = os[1];
+    folders[value]= zip.folder(value);
+
+  })
 }
-function addToZip(imgData,imgName,osType){
-  folders[osType].file(imgName, imgData, {base64: true});
+function addToZip(imgName,imgUrl,osType){
+  //Create the image file in the zip
+  folders[osType].file(imgName, imgUrl.split('base64,')[1],{base64: true});
 
 }
 function downloadAsZip(){
-
-//img.file("smile.gif", imgData, {base64: true});
-
+var imgData = canvas.toDataURL();
+addToZip("default.jpg",imgData,osTypes.android);
 zip.generateAsync({type:"blob"})
 .then(function(content) {
     // FileSaver.js Library
