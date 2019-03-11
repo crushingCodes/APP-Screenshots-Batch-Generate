@@ -39,7 +39,7 @@ function onFileSelected(event) {
   
     reader.onload = function(event) {
       img.src = event.target.result;
-       
+      if(img && img.naturalWidth && img.naturalWidth>0 && img.naturalHeight && img.naturalHeight>0){
       var imageObject={fileName:img.title ,width:img.naturalWidth,height:img.naturalHeight};
       if(imageObject.width>=imageObject.height){
         imageObject["orientation"]=orientation.landscape;
@@ -55,13 +55,16 @@ function onFileSelected(event) {
    // ctx.drawImage(img,0,0,100,180);
    canvas.height=targetHeight;
    canvas.width=targetWidth;
-    ctx.drawImage(img,0,0,targetWidth,targetHeight);
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
 
       images[imageObject.fileName]=imageObject;
       console.log(images);
       //Try force a canvas update with new picture loaded
       ctx.stroke();
 
+    }else{
+      console.log("Failed to load Image");
+    }
     };
   
     reader.readAsDataURL(selectedFile);
