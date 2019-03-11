@@ -7,11 +7,12 @@ body {
 }
 
 #previewCanvas{
- 
+  border:1px solid #000000;
 }
 #image-outer{
   opacity: 0;
 
 }
 #loadedimage{
+  height: 100;
 }
