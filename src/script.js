@@ -59,6 +59,9 @@ function onFileSelected(event) {
 
       images[imageObject.fileName]=imageObject;
       console.log(images);
+      //Try force a canvas update with new picture loaded
+      ctx.stroke();
+
     };
   
     reader.readAsDataURL(selectedFile);
