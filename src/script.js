@@ -1,5 +1,10 @@
 
- var canvas,ctx,zip;
+ var canvas,ctx;
+ var zip;
+ var imgElement;
+ var imgTargetId;
+ var images={};
+ var folders={};
 
  //Create a enum like object to easily reference desired platforms
  const osTypes={ios:"ios",android:"android"};
@@ -13,62 +18,86 @@
    "landscape5.5": {height:1242,width:2208}
 };
 
- var images={};
- var folders={};
+
 
 
 window.onload = function(){
   //Canvas should be loaded and ready to reference
-    canvas = document.getElementById("previewCanvas");
-    ctx = canvas.getContext("2d");
-    ctx.moveTo(0, 0);
-    //Get the canvas to init
-    ctx.stroke();
-    initZip();
+  canvas = document.getElementById("previewCanvas");
+  ctx = canvas.getContext("2d");
+  //Get the canvas to init
+  ctx.stroke();
+   //Reference an element just to get the image accessable to draw on canvas
+  imgElement = document.getElementById("loadedimage");
+  initZip();
+  
 
 };
 
+function imgRendered() {
+  //Render complete
+  drawImage();
+  console.log("should be rendered");
+}
+
+function startImgRender() {
+  //Rendering start
+  requestAnimationFrame(imgRendered);
+}
+
+function imgLoaded()  {
+  requestAnimationFrame(startImgRender);
+}
 function onFileSelected(event) {
-  var targetWidth=0,targetHeight=0;
   //Triggered after file selected
-    var selectedFile = event.target.files[0];
     var reader = new FileReader();
-  //Reference an invisible element just to get the image accessable
-    var img = document.getElementById("loadedimage");
-    img.title = selectedFile.name;
-  
+    var selectedFile = event.target.files[0];
+
+ 
+
     reader.onload = function(event) {
-      img.src = event.target.result;
-      if(img && img.naturalWidth && img.naturalWidth>0 && img.naturalHeight && img.naturalHeight>0){
-      var imageObject={fileName:img.title ,width:img.naturalWidth,height:img.naturalHeight};
-      if(imageObject.width>=imageObject.height){
-        imageObject["orientation"]=orientation.landscape;
-        targetHeight=sizeProfiles["landscape5.5"].height;
-        targetWidth=sizeProfiles["landscape5.5"].width;
-
-      }else{
-        imageObject["orientation"]=orientation.portrait;
-        targetHeight=sizeProfiles["portrait5.5"].height;
-        targetWidth=sizeProfiles["portrait5.5"].width;
-      }
-
-   // ctx.drawImage(img,0,0,100,180);
-   canvas.height=targetHeight;
-   canvas.width=targetWidth;
-    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      imgElement.title = selectedFile.name;
+      imgElement.src = event.target.result;
+     
+      
+      if(imgElement && imgElement.naturalWidth && imgElement.naturalWidth>0 && imgElement.naturalHeight && imgElement.naturalHeight>0){
+        imgLoaded()
+        var imageObject={fileName:imgElement.title ,width:imgElement.naturalWidth,height:imgElement.naturalHeight};
+      imgTargetId=imageObject.fileName;
 
       images[imageObject.fileName]=imageObject;
       console.log(images);
-      //Try force a canvas update with new picture loaded
-      ctx.stroke();
-
+ 
     }else{
       console.log("Failed to load Image");
-    }
+    
     };
   
-    reader.readAsDataURL(selectedFile);
   }
+  reader.readAsDataURL(selectedFile);
+
+}
+
+function drawImage(){
+var imageObject= images[imgTargetId];
+var targetWidth=0,targetHeight=0;
+
+  if(imageObject.width>=imageObject.height){
+    imageObject["orientation"]=orientation.landscape;
+    targetHeight=sizeProfiles["landscape5.5"].height;
+    targetWidth=sizeProfiles["landscape5.5"].width;
+
+  }else{
+    imageObject["orientation"]=orientation.portrait;
+    targetHeight=sizeProfiles["portrait5.5"].height;
+    targetWidth=sizeProfiles["portrait5.5"].width;
+  }
+  canvas.height=targetHeight;
+  canvas.width=targetWidth;
+  ctx.drawImage(imgElement,0,0,canvas.width,canvas.height);
+  //Try force a canvas update
+  ctx.stroke();
+}
 
 function initZip(){
   //JSZip.js Library
