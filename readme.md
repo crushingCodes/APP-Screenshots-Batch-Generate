@@ -5,11 +5,11 @@ This is a new project built for the purpose of providing a quick method to gener
 The first version in progress focuses on android and ios.
 The original version will run primarily as a web app using Javascript.
 
-### Insructions
+### Instructions
 The Codepen can be found below:
 
 [Checkout the Codepen](https://codepen.io/crushingcodes/pen/bZRpKJ#)
 
 #### Currently Working
-Upload one picture and you can output default size for iphone 5.5inch screenshot size in a zip.
+Upload one picture and you can output default size for iPhone 5.5inch screenshot size in a zip.
 
