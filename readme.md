@@ -11,5 +11,5 @@ The Codepen can be found below:
 [Checkout the Codepen](https://codepen.io/crushingcodes/pen/bZRpKJ#)
 
 #### Currently Working
-Upload one picture and you can output default size for iPhone 5.5inch screenshot size in a zip.
+Upload one picture and you can output default size for iPhone 5.5 inch screenshot size in a zip.
 
