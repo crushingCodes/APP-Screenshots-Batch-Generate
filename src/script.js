@@ -59,6 +59,9 @@ function onFileSelected(event) {
 
       images[imageObject.fileName]=imageObject;
       console.log(images);
+      //Try force a canvas update with new picture loaded
+      ctx.stroke();
+
     };
   
     reader.readAsDataURL(selectedFile);
@@ -85,7 +88,8 @@ function addToZip(imgName,imgUrl,osType){
 }
 function downloadAsZip(){
 var imgData = canvas.toDataURL();
-addToZip("default.jpg",imgData,osTypes.android);
+//For now just add one file to zip before downloading
+addToZip("default.jpg",imgData,osTypes.ios);
 zip.generateAsync({type:"blob"})
 .then(function(content) {
     // FileSaver.js Library
