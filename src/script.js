@@ -2,6 +2,7 @@
 //Declare global variables
 var canvas, ctx, zip, imgElement, imgTargetId, images = {}, folders = {};
 
+//var zipObject={};
 //Create a enum like object to easily reference desired platforms
 const osTypes = { ios: "ios", android: "android" };
 Object.freeze(osTypes);
@@ -118,16 +119,36 @@ function drawImage(targetSizeId) {
   addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId]);
 }
 function addToZip(imgName, imgUrl, sizeProfile) {
+  //Create a ref to delete later if needed
+  //zipObject[sizeProfile.platform+"/"+sizeProfile.sizeName]=imgName;
   //Create the image file in the zip
+
   folders[sizeProfile.platform][sizeProfile.sizeName].file(imgName, imgUrl.split('base64,')[1], { base64: true });
 }
 function onDeleteClick(fileName) {
   console.log("delete ", fileName)
+  //Remove from stored images object
+  delete images[fileName];
+  //Remove item from list view
+  var listItem = document.getElementById(fileName);
+  listItem.remove();
+  //Remove the item the same way it was created
+  Object.entries(sizeProfilesConfig).forEach(size => {
+    var targetSizeId = size[0];
+   removeFromZip(images[imgTargetId].fileName, sizeProfilesConfig[targetSizeId]);
+  })
+
+}
+function removeFromZip(imgName, sizeProfile) {
+  //Delete item from zip
+  folders[sizeProfile.platform][sizeProfile.sizeName].remove(imgName);
 }
 function addListElement(label) {
 
   var listParent = document.getElementById("imageListParent");
   var listItem = document.createElement('LI');
+  //Add label to id so we can find it easily later to delete
+  listItem.setAttribute("id",label);
   var listItemLabel = document.createTextNode(label);
 
   listItem.classList.add("list-group-item");
@@ -146,10 +167,6 @@ function addListElement(label) {
 
   listParent.appendChild(listItem);
 
-
-  //   <span class="pull-right button-group">
-  //   <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
-  // </span>
 
 }
 
