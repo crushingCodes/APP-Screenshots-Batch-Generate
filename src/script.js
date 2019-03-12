@@ -1,10 +1,6 @@
 
-var canvas, ctx;
-var zip;
-var imgElement;
-var imgTargetId;
-var images={};
-var folders = {};
+//Declare global variables
+var canvas, ctx, zip, imgElement, imgTargetId, images = {}, folders = {};
 
 //Create a enum like object to easily reference desired platforms
 const osTypes = { ios: "ios", android: "android" };
@@ -12,14 +8,13 @@ Object.freeze(osTypes);
 const orientation = { portrait: "portrait", landscape: "landscape" };
 Object.freeze(orientation);
 
+//Preset Config sizes for regular and large screens for ios and android
 const sizeProfilesConfig = {
-  "5.5": { sizeName:"5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208,platform:osTypes.ios},
-  "10.5": { sizeName:"10.5inch", pHeight: 1920, pWidth: 1080, lHeight: 1080, lWidth: 1920,platform:osTypes.ios},
-  "5.1": { sizeName:"5.1inch", pHeight: 2560, pWidth: 1440, lHeight: 1440, lWidth: 2560,platform:osTypes.android},
-  "10": { sizeName:"10inch", pHeight: 1280, pWidth: 800, lHeight: 800, lWidth: 1200,platform:osTypes.android},
+  "5.5": { sizeName: "5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208, platform: osTypes.ios },
+  "10.5": { sizeName: "10.5inch", pHeight: 1920, pWidth: 1080, lHeight: 1080, lWidth: 1920, platform: osTypes.ios },
+  "5.1": { sizeName: "5.1inch", pHeight: 2560, pWidth: 1440, lHeight: 1440, lWidth: 2560, platform: osTypes.android },
+  "10": { sizeName: "10inch", pHeight: 1280, pWidth: 800, lHeight: 800, lWidth: 1200, platform: osTypes.android },
 };
-
-
 
 window.onload = function () {
   //Canvas should be loaded and ready to reference
@@ -30,7 +25,6 @@ window.onload = function () {
   //Reference an element just to get the image accessable to draw on canvas
   imgElement = document.getElementById("loadedimage");
   initZip();
-
 };
 
 function onFileSelected(file) {
@@ -42,44 +36,40 @@ function onFileSelected(file) {
     imgElement.src = dataURL;
     //Check image is finished loading before allowing to prevent race conditions
     imgElement.onload = function () {
-      var fileName=input.files[0].name;
+      var fileName = input.files[0].name;
       //There is now a valid image, check the correct class on error div
-      toggleDispayClassOn("error-no-img",false);
+      toggleDispayClassOn("error-no-img", false);
       imgLoaded()
       var imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
       imgTargetId = imageObject.fileName;
       images[imageObject.fileName] = imageObject;
-      console.log("Loaded images",images);
+      console.log("Loaded images", images);
     };
     imgElement.onerror = function () {
       console.log("FAILED to load Image");
     };
   }
   reader.readAsDataURL(input.files[0]);
-
 }
 
-function toggleDispayClassOn(className,value){
+function toggleDispayClassOn(className, value) {
   var element = document.getElementById(className);
-if(value){
-  element.classList.remove("display-off");
-  element.classList.add("display-on");
-}else{
-  element.classList.remove("display-on");
-  element.classList.add("display-off");
-}
-
+  if (value) {
+    element.classList.remove("display-off");
+    element.classList.add("display-on");
+  } else {
+    element.classList.remove("display-on");
+    element.classList.add("display-off");
+  }
 }
 function startImgRender() {
   //Rendering start
   requestAnimationFrame(imgRendered);
 }
-
 function imgLoaded() {
   //Initail Image Loaded
   requestAnimationFrame(startImgRender);
 }
-
 function imgRendered() {
   //Render complete
   //Iterate size profiles and draw for each
@@ -87,15 +77,13 @@ function imgRendered() {
     var key = size[0];
     drawImage(key);
   });
-
 }
-
 function drawImage(targetSizeId) {
   //Temp targetSizeId variable until selection choices created
   var imageObject = images[imgTargetId];
   var targetWidth = 0, targetHeight = 0;
-  
 
+  //Automatically decides whether image is portrait or landscape based on input
   if (imageObject.width >= imageObject.height) {
     imageObject["orientation"] = orientation.landscape;
     targetHeight = sizeProfilesConfig[targetSizeId].lHeight;
@@ -115,9 +103,6 @@ function drawImage(targetSizeId) {
   var imgData = canvas.toDataURL();
   addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId]);
 }
-
-
-
 function initZip() {
   //JSZip.js Library
   zip = new JSZip();
@@ -130,10 +115,10 @@ function initZipFolders() {
     let value = os[1];
     folders[value] = zip.folder(value);
   })
-    //Create subdir for size profiles
-  Object.entries(sizeProfilesConfig).forEach(size =>{
-    let sizeProfile= size[1];
-    folders[sizeProfile.platform][sizeProfile.sizeName]= zip.folder(sizeProfile.platform+"/"+sizeProfile.sizeName);
+  //Create subdir for size profiles
+  Object.entries(sizeProfilesConfig).forEach(size => {
+    let sizeProfile = size[1];
+    folders[sizeProfile.platform][sizeProfile.sizeName] = zip.folder(sizeProfile.platform + "/" + sizeProfile.sizeName);
   })
 }
 function addToZip(imgName, imgUrl, sizeProfile) {
@@ -142,17 +127,16 @@ function addToZip(imgName, imgUrl, sizeProfile) {
 }
 function downloadAsZip() {
   console.log(images);
-  if(Object.keys(images).length === 0 && images.constructor === Object){
-
-    toggleDispayClassOn("error-no-img",true);
-   // alert("No images have been selected yet");
-  }else{
-
-  zip.generateAsync({ type: "blob" })
-    .then(function (content) {
-      // FileSaver.js Library
-      saveAs(content, "screenshots.zip");
-    });
-
+  //Check for empty images object
+  //NOTE supported by ECMA 5+
+  if (Object.keys(images).length === 0 && images.constructor === Object) {
+    toggleDispayClassOn("error-no-img", true);
+  } else {
+    //Contains valid image, clear to proceed with download
+    zip.generateAsync({ type: "blob" })
+      .then(function (content) {
+        // FileSaver.js Library
+        saveAs(content, "screenshots.zip");
+      });
   }
 }
