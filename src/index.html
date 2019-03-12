@@ -47,7 +47,11 @@
         
 
         <input type="file" accept='image/*' onchange="onFileSelected(event)" class="form-control">
-         
+        <ul id="imageListParent" class="list-group">
+   
+
+
+        </ul>
         <img id="loadedimage" height="100" >
 
      
@@ -56,6 +60,8 @@
       <div id="error-no-img" class="alert alert-warning display-off" role="alert">
         Please load a valid image before downloading!
       </div>
+
+ 
       <br>
       <!--Canvas will remain Transparent-->
       <canvas id="previewCanvas" width="200" height="200" >

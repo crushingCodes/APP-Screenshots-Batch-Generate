@@ -13,7 +13,7 @@ const sizeProfilesConfig = {
   "5.5": { sizeName: "5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208, platform: osTypes.ios },
   "10.5": { sizeName: "10.5inch", pHeight: 2224, pWidth: 1668, lHeight: 1668, lWidth: 2224, platform: osTypes.ios },
   "5.1": { sizeName: "5.1inch", pHeight: 1280, pWidth: 800, lHeight: 800, lWidth: 1280, platform: osTypes.android },
-  "10": { sizeName: "10inch", pHeight:2560 , pWidth: 1700, lHeight: 1700, lWidth: 2560, platform: osTypes.android },
+  "10": { sizeName: "10inch", pHeight: 2560, pWidth: 1700, lHeight: 1700, lWidth: 2560, platform: osTypes.android },
 };
 
 window.onload = function () {
@@ -27,6 +27,26 @@ window.onload = function () {
   initZip();
 };
 
+function initZip() {
+  //JSZip.js Library
+  zip = new JSZip();
+  zip.file("Hello.txt", "Thank you for using APP Screenshot Generator\n" +
+    "Please find updates at https://github.com/crushingCodes/APP-Screenshots-Batch-Generate\n");
+  initZipFolders();
+}
+function initZipFolders() {
+  //For each defined os defined osTypes
+  Object.entries(osTypes).forEach(os => {
+    let value = os[1];
+    folders[value] = zip.folder(value);
+  })
+  //Create subdir for size profiles
+  Object.entries(sizeProfilesConfig).forEach(size => {
+    let sizeProfile = size[1];
+    folders[sizeProfile.platform][sizeProfile.sizeName] = zip.folder(sizeProfile.platform + "/" + sizeProfile.sizeName);
+  })
+}
+
 function onFileSelected(file) {
   //Triggered after file selected
   var reader = new FileReader();
@@ -39,6 +59,10 @@ function onFileSelected(file) {
       var fileName = input.files[0].name;
       //There is now a valid image, check the correct class on error div
       toggleDispayClassOn("error-no-img", false);
+      //Add list item in html
+      if (!images[fileName]) {
+        addListElement(fileName);
+      }
       imgLoaded()
       var imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
       imgTargetId = imageObject.fileName;
@@ -52,16 +76,6 @@ function onFileSelected(file) {
   reader.readAsDataURL(input.files[0]);
 }
 
-function toggleDispayClassOn(className, value) {
-  var element = document.getElementById(className);
-  if (value) {
-    element.classList.remove("display-off");
-    element.classList.add("display-on");
-  } else {
-    element.classList.remove("display-on");
-    element.classList.add("display-off");
-  }
-}
 function startImgRender() {
   //Rendering start
   requestAnimationFrame(imgRendered);
@@ -103,29 +117,42 @@ function drawImage(targetSizeId) {
   var imgData = canvas.toDataURL();
   addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId]);
 }
-function initZip() {
-  //JSZip.js Library
-  zip = new JSZip();
-  zip.file("Hello.txt", "Thank you for using APP Screenshot Generator\n"+
-  "Please find updates at https://github.com/crushingCodes/APP-Screenshots-Batch-Generate\n");
-  initZipFolders();
-}
-function initZipFolders() {
-  //For each defined os defined osTypes
-  Object.entries(osTypes).forEach(os => {
-    let value = os[1];
-    folders[value] = zip.folder(value);
-  })
-  //Create subdir for size profiles
-  Object.entries(sizeProfilesConfig).forEach(size => {
-    let sizeProfile = size[1];
-    folders[sizeProfile.platform][sizeProfile.sizeName] = zip.folder(sizeProfile.platform + "/" + sizeProfile.sizeName);
-  })
-}
 function addToZip(imgName, imgUrl, sizeProfile) {
   //Create the image file in the zip
   folders[sizeProfile.platform][sizeProfile.sizeName].file(imgName, imgUrl.split('base64,')[1], { base64: true });
 }
+function onDeleteClick(fileName) {
+  console.log("delete ", fileName)
+}
+function addListElement(label) {
+
+  var listParent = document.getElementById("imageListParent");
+  var listItem = document.createElement('LI');
+  var listItemLabel = document.createTextNode(label);
+
+  listItem.classList.add("list-group-item");
+
+  listItem.appendChild(listItemLabel);
+
+  var listSpan = document.createElement('span')
+  listSpan.classList.add("pull-right");
+  listSpan.classList.add("button-group");
+  var tempLabel = "'" + label + "'";
+  //Add dynamic functions to each created button
+  listSpan.innerHTML = '<button class="btn btn-outline-primary btn-sm"' +
+    '" onclick="onDeleteClick(' + tempLabel + ')"><span class="glyphicon glyphicon-remove"></span></button>';
+
+  listItem.appendChild(listSpan)
+
+  listParent.appendChild(listItem);
+
+
+  //   <span class="pull-right button-group">
+  //   <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+  // </span>
+
+}
+
 function downloadAsZip() {
   console.log(images);
   //Check for empty images object
@@ -139,5 +166,17 @@ function downloadAsZip() {
         // FileSaver.js Library
         saveAs(content, "screenshots.zip");
       });
+  }
+
+
+}
+function toggleDispayClassOn(idName, value) {
+  var element = document.getElementById(idName);
+  if (value) {
+    element.classList.remove("display-off");
+    element.classList.add("display-on");
+  } else {
+    element.classList.remove("display-on");
+    element.classList.add("display-off");
   }
 }
