@@ -43,7 +43,7 @@
 
       <div class="starter-template">
         <h1>APP Screenshot Size Generator</h1>
-        <p class="lead">Start by choosing a file. Then after the picture displays correctly in the Loading Area, click Download.</p>
+        <p class="lead">Start by choosing a file. Once the image is displayed in the preview, click Download.</p>
         
 
         <input type="file" accept='image/*' onchange="onFileSelected(event)" class="form-control">
@@ -51,9 +51,13 @@
         <img id="loadedimage" height="100" >
 
      
-      <button type="button" class="btn btn-primary" onclick="downloadAsZip()">Download</button>
-<h3>Loading Area</h3>
+      <button id="button-download" type="button"  class="btn btn-primary" onclick="downloadAsZip()">Download</button>
+      <div ></div>
+      <div id="error-no-img" class="alert alert-warning display-off" role="alert">
+        Please load a valid image before downloading!
+      </div>
       <br>
+      <!--Canvas will remain Transparent-->
       <canvas id="previewCanvas" width="200" height="200" >
       </canvas>
     
