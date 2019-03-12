@@ -1,8 +1,6 @@
-
 //Declare global variables
-var canvas, ctx, zip, imgElement, imgTargetId, images = {}, folders = {};
+let canvas, ctx, zip, imgElement, imgTargetId, images = {}, folders = {};
 
-//var zipObject={};
 //Create a enum like object to easily reference desired platforms
 const osTypes = { ios: "ios", android: "android" };
 Object.freeze(osTypes);
@@ -50,14 +48,14 @@ function initZipFolders() {
 
 function onFileSelected(file) {
   //Triggered after file selected
-  var reader = new FileReader();
-  var input = file.target;
+  let reader = new FileReader();
+  let input = file.target;
   reader.onload = function (event) {
-    var dataURL = reader.result;
+    let dataURL = reader.result;
     imgElement.src = dataURL;
     //Check image is finished loading before allowing to prevent race conditions
     imgElement.onload = function () {
-      var fileName = input.files[0].name;
+      let fileName = input.files[0].name;
       //There is now a valid image, check the correct class on error div
       toggleDispayClassOn("error-no-img", false);
       //Add list item in html
@@ -65,7 +63,7 @@ function onFileSelected(file) {
         addListElement(fileName);
       }
       imgLoaded()
-      var imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
+      let imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
       imgTargetId = imageObject.fileName;
       images[imageObject.fileName] = imageObject;
       console.log("Loaded images", images);
@@ -89,14 +87,14 @@ function imgRendered() {
   //Render complete
   //Iterate size profiles and draw for each
   Object.entries(sizeProfilesConfig).forEach(size => {
-    var key = size[0];
+    let key = size[0];
     drawImage(key);
   });
 }
 function drawImage(targetSizeId) {
   //Temp targetSizeId variable until selection choices created
-  var imageObject = images[imgTargetId];
-  var targetWidth = 0, targetHeight = 0;
+  let imageObject = images[imgTargetId];
+  let targetWidth = 0, targetHeight = 0;
 
   //Automatically decides whether image is portrait or landscape based on input
   if (imageObject.width >= imageObject.height) {
@@ -115,7 +113,7 @@ function drawImage(targetSizeId) {
   //Try force a canvas update
   ctx.stroke();
   //Save image to zip so another image can be loaded
-  var imgData = canvas.toDataURL();
+  let imgData = canvas.toDataURL();
   addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId]);
 }
 function addToZip(imgName, imgUrl, sizeProfile) {
@@ -126,17 +124,16 @@ function addToZip(imgName, imgUrl, sizeProfile) {
 }
 function onDeleteClick(fileName) {
   console.log("Delete ", fileName)
-  //Remove from stored images object
-  delete images[fileName];
   //Remove item from list view
-  var listItem = document.getElementById(fileName);
+  let listItem = document.getElementById(fileName);
   listItem.remove();
   //Remove the item the same way it was created
   Object.entries(sizeProfilesConfig).forEach(size => {
-    var targetSizeId = size[0];
+    let targetSizeId = size[0];
    removeFromZip(images[imgTargetId].fileName, sizeProfilesConfig[targetSizeId]);
   })
-
+    //Remove from stored images object
+  delete images[fileName];
 }
 function removeFromZip(imgName, sizeProfile) {
   //Delete item from zip
@@ -144,29 +141,25 @@ function removeFromZip(imgName, sizeProfile) {
 }
 function addListElement(label) {
 
-  var listParent = document.getElementById("imageListParent");
-  var listItem = document.createElement('LI');
+  let listParent = document.getElementById("imageListParent");
+  let listItem = document.createElement('LI');
   //Add label to id so we can find it easily later to delete
   listItem.setAttribute("id",label);
-  var listItemLabel = document.createTextNode(label);
+  let listItemLabel = document.createTextNode(label);
 
   listItem.classList.add("list-group-item");
 
   listItem.appendChild(listItemLabel);
 
-  var listSpan = document.createElement('span')
+  let listSpan = document.createElement('span')
   listSpan.classList.add("pull-right");
   listSpan.classList.add("button-group");
-  var tempLabel = "'" + label + "'";
+  let tempLabel = "'" + label + "'";
   //Add dynamic functions to each created button
   listSpan.innerHTML = '<button class="btn btn-outline-primary btn-sm"' +
     '" onclick="onDeleteClick(' + tempLabel + ')"><span class="glyphicon glyphicon-remove"></span></button>';
-
   listItem.appendChild(listSpan)
-
   listParent.appendChild(listItem);
-
-
 }
 
 function downloadAsZip() {
@@ -187,7 +180,7 @@ function downloadAsZip() {
 
 }
 function toggleDispayClassOn(idName, value) {
-  var element = document.getElementById(idName);
+  let element = document.getElementById(idName);
   if (value) {
     element.classList.remove("display-off");
     element.classList.add("display-on");
