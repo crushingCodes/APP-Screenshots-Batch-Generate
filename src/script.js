@@ -106,7 +106,8 @@ function drawImage(targetSizeId) {
 function initZip() {
   //JSZip.js Library
   zip = new JSZip();
-  zip.file("Hello.txt", "Thank you for using APP Screenshot Generator\n");
+  zip.file("Hello.txt", "Thank you for using APP Screenshot Generator\n"+
+  "Please find updates at https://github.com/crushingCodes/APP-Screenshots-Batch-Generate\n");
   initZipFolders();
 }
 function initZipFolders() {
