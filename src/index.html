@@ -46,9 +46,9 @@
         <p class="lead">Start by choosing a file. Then after the picture displays correctly in the Loading Area, click Download.</p>
         
 
-        <input type="file" onchange="onFileSelected(event)" class="form-control">
-         <div id="img-parent"></div>
-        <!----<img id="loadedimage" height="100" >-->
+        <input type="file" accept='image/*' onchange="onFileSelected(event)" class="form-control">
+         
+        <img id="loadedimage" height="100" >
 
      
       <button type="button" class="btn btn-primary" onclick="downloadAsZip()">Download</button>
