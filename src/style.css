@@ -7,11 +7,5 @@ body {
 }
 
 #previewCanvas{
- 
-}
-#image-outer{
-  opacity: 0;
-
-}
-#loadedimage{
+  border:1px solid #000000;
 }

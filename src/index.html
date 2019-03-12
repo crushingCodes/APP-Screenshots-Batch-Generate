@@ -4,11 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-  <!--  <link rel="icon" href="../../favicon.ico"> -->
-
     <title>APP Screenshot Size Generator</title>
 
     <script src="script.js"></script>
@@ -51,14 +46,15 @@
         <p class="lead">Start by choosing a file. Then after the picture displays correctly in the Loading Area, click Download.</p>
         
 
-        <input type="file" onchange="onFileSelected(event)" class="form-control">
-          <img id="loadedimage" height="100">
+        <input type="file" accept='image/*' onchange="onFileSelected(event)" class="form-control">
+         
+        <img id="loadedimage" height="100" >
 
-      </canvas>
+     
       <button type="button" class="btn btn-primary" onclick="downloadAsZip()">Download</button>
 <h3>Loading Area</h3>
       <br>
-      <canvas id="previewCanvas" width="200" height="200" style="border:1px solid #000000;">
+      <canvas id="previewCanvas" width="200" height="200" >
       </canvas>
     
     
