@@ -11,4 +11,3 @@ You can run the code from Codepen below:
 
 #### Currently Working
 Upload one picture or more pictures and you can output default screenshot sizes for ios and android phone and tablet.
-
