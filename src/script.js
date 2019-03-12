@@ -39,27 +39,35 @@ function onFileSelected(file) {
   var input = file.target;
   reader.onload = function (event) {
     var dataURL = reader.result;
-    
     imgElement.src = dataURL;
-
-      
     //Check image is finished loading before allowing to prevent race conditions
     imgElement.onload = function () {
       var fileName=input.files[0].name;
-   
+      //There is now a valid image, check the correct class on error div
+      toggleDispayClassOn("error-no-img",false);
       imgLoaded()
       var imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
       imgTargetId = imageObject.fileName;
-
       images[imageObject.fileName] = imageObject;
-      console.log(images);
+      console.log("Loaded images",images);
     };
     imgElement.onerror = function () {
       console.log("FAILED to load Image");
-
     };
   }
   reader.readAsDataURL(input.files[0]);
+
+}
+
+function toggleDispayClassOn(className,value){
+  var element = document.getElementById(className);
+if(value){
+  element.classList.remove("display-off");
+  element.classList.add("display-on");
+}else{
+  element.classList.remove("display-on");
+  element.classList.add("display-off");
+}
 
 }
 function startImgRender() {
@@ -133,10 +141,18 @@ function addToZip(imgName, imgUrl, sizeProfile) {
   folders[sizeProfile.platform][sizeProfile.sizeName].file(imgName, imgUrl.split('base64,')[1], { base64: true });
 }
 function downloadAsZip() {
+  console.log(images);
+  if(Object.keys(images).length === 0 && images.constructor === Object){
+
+    toggleDispayClassOn("error-no-img",true);
+   // alert("No images have been selected yet");
+  }else{
 
   zip.generateAsync({ type: "blob" })
     .then(function (content) {
       // FileSaver.js Library
       saveAs(content, "screenshots.zip");
     });
+
+  }
 }
