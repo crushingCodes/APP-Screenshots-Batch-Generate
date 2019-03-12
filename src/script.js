@@ -120,13 +120,12 @@ function drawImage(targetSizeId) {
 }
 function addToZip(imgName, imgUrl, sizeProfile) {
   //Create a ref to delete later if needed
-  //zipObject[sizeProfile.platform+"/"+sizeProfile.sizeName]=imgName;
   //Create the image file in the zip
 
   folders[sizeProfile.platform][sizeProfile.sizeName].file(imgName, imgUrl.split('base64,')[1], { base64: true });
 }
 function onDeleteClick(fileName) {
-  console.log("delete ", fileName)
+  console.log("Delete ", fileName)
   //Remove from stored images object
   delete images[fileName];
   //Remove item from list view
