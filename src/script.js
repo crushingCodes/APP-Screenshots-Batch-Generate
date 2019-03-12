@@ -3,7 +3,7 @@ var canvas, ctx;
 var zip;
 var imgElement;
 var imgTargetId;
-var images;
+var images={};
 var folders = {};
 
 //Create a enum like object to easily reference desired platforms
@@ -22,9 +22,6 @@ const sizeProfilesConfig = {
 
 
 window.onload = function () {
-  images = {};
-
-
   //Canvas should be loaded and ready to reference
   canvas = document.getElementById("previewCanvas");
   ctx = canvas.getContext("2d");
@@ -35,8 +32,6 @@ window.onload = function () {
   initZip();
 
 };
-
-
 
 function onFileSelected(file) {
   //Triggered after file selected
@@ -110,12 +105,7 @@ function drawImage(targetSizeId) {
   ctx.stroke();
   //Save image to zip so another image can be loaded
   var imgData = canvas.toDataURL();
-//   console.log('1',images)
-//   console.log('2',imgTargetId)
-
-// console.log('3',images[imgTargetId])
-
-  addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId].platform);
+  addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId]);
 }
 
 
@@ -127,17 +117,20 @@ function initZip() {
   initZipFolders();
 }
 function initZipFolders() {
-  //For each defined os defined u osTypes
+  //For each defined os defined osTypes
   Object.entries(osTypes).forEach(os => {
     let value = os[1];
     folders[value] = zip.folder(value);
-
+  })
+    //Create subdir for size profiles
+  Object.entries(sizeProfilesConfig).forEach(size =>{
+    let sizeProfile= size[1];
+    folders[sizeProfile.platform][sizeProfile.sizeName]= zip.folder(sizeProfile.platform+"/"+sizeProfile.sizeName);
   })
 }
-function addToZip(imgName, imgUrl, osType) {
+function addToZip(imgName, imgUrl, sizeProfile) {
   //Create the image file in the zip
-  folders[osType].file(imgName, imgUrl.split('base64,')[1], { base64: true });
-
+  folders[sizeProfile.platform][sizeProfile.sizeName].file(imgName, imgUrl.split('base64,')[1], { base64: true });
 }
 function downloadAsZip() {
 
