@@ -11,12 +11,13 @@ const osTypes = { ios: "ios", android: "android" };
 Object.freeze(osTypes);
 const orientation = { portrait: "portrait", landscape: "landscape" };
 Object.freeze(orientation);
-//  1242 x 2208 pixels (portrait)
-//  2208 x 1242 pixels (landscape
-const sizeProfiles = {
-  "5.5": { sizeName:"5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208,platform:osTypes.ios},
-};
 
+const sizeProfilesConfig = {
+  "5.5": { sizeName:"5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208,platform:osTypes.ios},
+  "10.5": { sizeName:"10.5inch", pHeight: 1920, pWidth: 1080, lHeight: 1080, lWidth: 1920,platform:osTypes.ios},
+  "5.1": { sizeName:"5.1inch", pHeight: 2560, pWidth: 1440, lHeight: 1440, lWidth: 2560,platform:osTypes.android},
+  "10": { sizeName:"10inch", pHeight: 1280, pWidth: 800, lHeight: 800, lWidth: 1200,platform:osTypes.android},
+};
 
 
 
@@ -35,20 +36,7 @@ window.onload = function () {
 
 };
 
-function imgRendered() {
-  //Render complete
-  drawImage();
-}
 
-function startImgRender() {
-  //Rendering start
-  requestAnimationFrame(imgRendered);
-}
-
-function imgLoaded() {
-  //Initail Image Loaded
-  requestAnimationFrame(startImgRender);
-}
 
 function onFileSelected(file) {
   //Triggered after file selected
@@ -56,13 +44,16 @@ function onFileSelected(file) {
   var input = file.target;
   reader.onload = function (event) {
     var dataURL = reader.result;
-
+    
     imgElement.src = dataURL;
 
+      
     //Check image is finished loading before allowing to prevent race conditions
     imgElement.onload = function () {
+      var fileName=input.files[0].name;
+   
       imgLoaded()
-      var imageObject = { fileName: imgElement.title, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
+      var imageObject = { fileName: fileName, width: imgElement.naturalWidth, height: imgElement.naturalHeight };
       imgTargetId = imageObject.fileName;
 
       images[imageObject.fileName] = imageObject;
@@ -76,27 +67,55 @@ function onFileSelected(file) {
   reader.readAsDataURL(input.files[0]);
 
 }
+function startImgRender() {
+  //Rendering start
+  requestAnimationFrame(imgRendered);
+}
 
-function drawImage() {
+function imgLoaded() {
+  //Initail Image Loaded
+  requestAnimationFrame(startImgRender);
+}
+
+function imgRendered() {
+  //Render complete
+  //Iterate size profiles and draw for each
+  Object.entries(sizeProfilesConfig).forEach(size => {
+    var key = size[0];
+    drawImage(key);
+  });
+
+}
+
+function drawImage(targetSizeId) {
+  //Temp targetSizeId variable until selection choices created
   var imageObject = images[imgTargetId];
   var targetWidth = 0, targetHeight = 0;
+  
 
   if (imageObject.width >= imageObject.height) {
     imageObject["orientation"] = orientation.landscape;
-    targetHeight = sizeProfiles["5.5"].lHeight;
-    targetWidth = sizeProfiles["5.5"].lWidth;
+    targetHeight = sizeProfilesConfig[targetSizeId].lHeight;
+    targetWidth = sizeProfilesConfig[targetSizeId].lWidth;
 
   } else {
     imageObject["orientation"] = orientation.portrait;
-    targetHeight = sizeProfiles["5.5"].pHeight;
-    targetWidth = sizeProfiles["5.5"].pWidth;
+    targetHeight = sizeProfilesConfig[targetSizeId].pHeight;
+    targetWidth = sizeProfilesConfig[targetSizeId].pWidth;
   }
   canvas.height = targetHeight;
   canvas.width = targetWidth;
   ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
   //Try force a canvas update
   ctx.stroke();
-  
+  //Save image to zip so another image can be loaded
+  var imgData = canvas.toDataURL();
+//   console.log('1',images)
+//   console.log('2',imgTargetId)
+
+// console.log('3',images[imgTargetId])
+
+  addToZip(images[imgTargetId].fileName, imgData, sizeProfilesConfig[targetSizeId].platform);
 }
 
 
@@ -121,9 +140,7 @@ function addToZip(imgName, imgUrl, osType) {
 
 }
 function downloadAsZip() {
-  var imgData = canvas.toDataURL();
-  //For now just add one file to zip before downloading
-  addToZip("default.jpg", imgData, osTypes.ios);
+
   zip.generateAsync({ type: "blob" })
     .then(function (content) {
       // FileSaver.js Library
