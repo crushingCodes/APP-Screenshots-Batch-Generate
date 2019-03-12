@@ -14,8 +14,7 @@ Object.freeze(orientation);
 //  1242 x 2208 pixels (portrait)
 //  2208 x 1242 pixels (landscape
 const sizeProfiles = {
-  "portrait5.5": { height: 2208, width: 1242 },
-  "landscape5.5": { height: 1242, width: 2208 }
+  "5.5": { sizeName:"5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208,platform:osTypes.ios},
 };
 
 
@@ -84,13 +83,13 @@ function drawImage() {
 
   if (imageObject.width >= imageObject.height) {
     imageObject["orientation"] = orientation.landscape;
-    targetHeight = sizeProfiles["landscape5.5"].height;
-    targetWidth = sizeProfiles["landscape5.5"].width;
+    targetHeight = sizeProfiles["5.5"].lHeight;
+    targetWidth = sizeProfiles["5.5"].lWidth;
 
   } else {
     imageObject["orientation"] = orientation.portrait;
-    targetHeight = sizeProfiles["portrait5.5"].height;
-    targetWidth = sizeProfiles["portrait5.5"].width;
+    targetHeight = sizeProfiles["5.5"].pHeight;
+    targetWidth = sizeProfiles["5.5"].pWidth;
   }
   canvas.height = targetHeight;
   canvas.width = targetWidth;
