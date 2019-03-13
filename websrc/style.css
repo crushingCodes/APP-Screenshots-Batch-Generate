@@ -1,0 +1,18 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+#previewCanvas{
+  opacity: 0;
+}
+
+.display-off{
+  display: none;
+}
+.display-on{
+  display: block;
+}
