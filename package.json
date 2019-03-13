@@ -8,7 +8,7 @@
     "generate": "dist/index.js",
     "clean": "rm -r dist && mkdir dist && rm -r screensIn && rm -r screensOut && mkdir screensIn && mkdir screensOut",
     "prebuild": "npm run clean",
-    "app-g-build": "npm run start"
+    "build": "npm run start"
   },
   "bin": {
     "app-g-build": "bin/app-g-build.js",
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/crushingCodes/APP-Screenshots-Batch-Generate.git"
   },
-  "author": "Gavin James Boyd",
+  "author": "crushingCodes",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/crushingCodes/APP-Screenshots-Batch-Generate/issues"
