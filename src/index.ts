@@ -36,4 +36,18 @@ function getInputDimensions(inputProfile:SizeProfile):Dimensions{
     }
 return dimensions;
 }
+/*
+var sizeOf = require('image-size');
 
+sizeOf('images/funny-cats.png', function (err, dimensions) {
+  console.log(dimensions.width, dimensions.height);
+});
+*/
+
+const pkgDir = require('pkg-dir');
+(async () => {
+    const rootDir = await pkgDir("screensIn");
+ 
+    console.log(rootDir);
+    //=> '/Users/sindresorhus/foo'
+})();
