@@ -29,6 +29,8 @@
     "@types/node": "^11.11.3",
     "image-size": "^0.7.2",
     "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "resize-img": "^1.1.2",
     "shelljs": "^0.8.3"
   },
   "devDependencies": {

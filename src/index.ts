@@ -6,6 +6,8 @@ import * as _ from "lodash";
 type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension= number;
+const OutputFolder= './screensOut/';
+const inputFolder = './screensIn/';
 
 interface Dimensions {
     height:Dimension,
@@ -55,11 +57,20 @@ getImageInpObjects();
 
 function getImageInpObjects(){
 
-
-const inputFolder = './screensIn/';
 const fs = require('fs');
+const resizeImg = require('resize-img');
 let sizeOf = require('image-size');
-let imgPath="";
+let inpImgPath="";
+let outImgDir="";
+let outImgPath="";
+let dimensionsIn;
+
+const mkdirp = require('mkdirp');
+outImgDir=OutputFolder+"size1/";    
+mkdirp(outImgDir, function (err) {
+    if (err) console.error(err)
+    else console.log('pow!')
+});
 
 //let newImageObj:ImageObject;
 let newImagesObj={};
@@ -67,21 +78,24 @@ let newImagesObj={};
 fs.readdirSync(inputFolder).forEach(file => {
 
 
-  imgPath=inputFolder+file;
-  sizeOf(imgPath, function (err, dimensionsIn) {
-    //console.log(file);
-
-    //console.log(dimensionsIn.width, dimensionsIn.height);
+  inpImgPath=inputFolder+file;
+   dimensionsIn = sizeOf(inpImgPath);
     let newImageObj={};
     newImageObj={fileName:file,dimensions:getInputDimensions(dimensionsIn.width, dimensionsIn.height)};
     newImagesObj[file]=newImageObj;
-    
-    console.log(newImageObj);
+    outImgPath=outImgDir+file;
 
-  });
-
+    processImage(inpImgPath,outImgPath);
 });
 console.log(newImagesObj);
 
 return newImagesObj;
+}
+
+function processImage(inpImgPath:string,outImgPath:string){
+    const fs = require('fs');
+const resizeImg = require('resize-img');
+    resizeImg(fs.readFileSync(inpImgPath), {width: 128, height: 128}).then(buf => {
+        fs.writeFileSync(outImgPath, buf);
+    });
 }
