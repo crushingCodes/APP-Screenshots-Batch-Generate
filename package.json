@@ -6,11 +6,17 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "say-hello": "echo 'Hello World'",
+    "presay-hello": "echo 'I run before say-hello'",
+    "postsay-hello": "echo 'I run after say-hello'",
     "awesome-npm": "npm run say-hello && echo 'echo NPM is awesome!'",
     "clean": "rm -r dist && mkdir dist",
-    "build": "npm run clean && npm run start",
+    "prebuild": "npm run clean",
+    "build": "npm run start",
     "bash-hello": "bash hello.sh",
     "js-add": "node add.js"
+  },
+  "bin": {
+    "github-pages-commit": "bin/commit.js"
   },
   "repository": {
     "type": "git",
