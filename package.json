@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
+    "generate": "dist/index.js",
     "say-hello": "echo 'Hello World'",
     "presay-hello": "echo 'I run before say-hello'",
     "postsay-hello": "echo 'I run after say-hello'",
@@ -16,7 +17,8 @@
     "js-add": "node add.js"
   },
   "bin": {
-    "github-pages-commit": "bin/commit.js"
+    "github-pages-commit": "bin/commit.js",
+    "app-generate-screens": "bin/app-generate-screens.js"
   },
   "repository": {
     "type": "git",
