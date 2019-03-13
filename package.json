@@ -6,11 +6,13 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "generate": "dist/index.js",
-    "clean": "rm -r dist && mkdir dist",
+    "clean": "rm -r dist && mkdir dist && rm -r screensIn && rm -r screensOut && mkdir screensIn && mkdir screensOut",
     "prebuild": "npm run clean",
-    "build": "npm run start"
+    "app-g-build": "npm run start"
   },
   "bin": {
+    "app-g-build": "bin/app-g-build.js",
+    "app-g-build-silent": "bin/app-g-build-silent.js",
     "app-g-generate": "bin/app-g-generate.js"
   },
   "repository": {
