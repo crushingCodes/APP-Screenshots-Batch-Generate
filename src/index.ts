@@ -12,8 +12,8 @@ interface Dimensions {
 }
 
 interface SizeProfile {
-    size1:number,
-    size2:number,
+    width:Dimension,
+    height:Dimension,
     //This will allow creation of new keys
     //[key:string]:any,
 }
@@ -21,18 +21,18 @@ interface OutputProfile{
     dimensions:Dimensions,
     platform:Platform
 }
-let testInputProfile:SizeProfile={size1:100,size2:200};
+let testInputProfile:SizeProfile={width:300,height:200};
 
 console.log(getInputDimensions(testInputProfile));
 
 function getInputDimensions(inputProfile:SizeProfile):Dimensions{
     //Give input dimensions and return dimensions with correct size and orientation
-    var dimensions: Dimensions;
+    let dimensions: Dimensions;
 
-    if(inputProfile.size1>=inputProfile.size2){
-        dimensions= {width:inputProfile.size1,height:inputProfile.size2,orientation:"portrait"};
+    if(inputProfile.width>=inputProfile.height){
+        dimensions= {width:inputProfile.width,height:inputProfile.height,orientation:"landscape"};
     }else{
-        dimensions= {width:inputProfile.size1,height:inputProfile.size2,orientation:"landscape"}
+        dimensions= {width:inputProfile.width,height:inputProfile.height,orientation:"portrait"}
     }
 return dimensions;
 }

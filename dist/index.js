@@ -1,13 +1,13 @@
-let testInputProfile = { size1: 100, size2: 200 };
+let testInputProfile = { width: 300, height: 200 };
 console.log(getInputDimensions(testInputProfile));
 function getInputDimensions(inputProfile) {
     //Give input dimensions and return dimensions with correct size and orientation
-    var dimensions;
-    if (inputProfile.size1 >= inputProfile.size2) {
-        dimensions = { width: inputProfile.size1, height: inputProfile.size2, orientation: "portrait" };
+    let dimensions;
+    if (inputProfile.width >= inputProfile.height) {
+        dimensions = { width: inputProfile.width, height: inputProfile.height, orientation: "landscape" };
     }
     else {
-        dimensions = { width: inputProfile.size1, height: inputProfile.size2, orientation: "landscape" };
+        dimensions = { width: inputProfile.width, height: inputProfile.height, orientation: "portrait" };
     }
     return dimensions;
 }
