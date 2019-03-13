@@ -4,7 +4,7 @@
   "description": "This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms. The original version will run primarily as a web app using Javascript.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc && node dist/index.js"
   },
   "repository": {
     "type": "git",
