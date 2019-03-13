@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "generate": "dist/index.js",
-    "clean": "rm -r dist && mkdir dist && rm -r screensIn && rm -r screensOut && mkdir screensIn && mkdir screensOut",
+    "clean": "rm -r dist && mkdir dist && rm -r screensOut && mkdir screensOut",
     "prebuild": "npm run clean",
     "build": "npm run start"
   },
@@ -29,7 +29,6 @@
     "@types/node": "^11.11.3",
     "image-size": "^0.7.2",
     "lodash": "^4.17.11",
-    "pkg-dir": "^4.0.0",
     "shelljs": "^0.8.3"
   },
   "devDependencies": {
