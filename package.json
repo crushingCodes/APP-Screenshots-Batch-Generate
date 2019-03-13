@@ -4,7 +4,11 @@
   "description": "This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms. The original version will run primarily as a web app using Javascript. Currently creating npm version which can be added to anyones build scripts.",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && node dist/index.js"
+    "start": "tsc && node dist/index.js",
+    "say-hello": "echo 'Hello World'",
+    "awesome-npm": "npm run say-hello && echo 'echo NPM is awesome!'",
+    "clean": "rm -r dist && mkdir dist",
+    "build": "npm run clean && npm run start"
   },
   "repository": {
     "type": "git",
