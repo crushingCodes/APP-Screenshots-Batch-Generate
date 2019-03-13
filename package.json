@@ -11,7 +11,7 @@
     "build": "npm run start"
   },
   "bin": {
-    "app-g-install": "bin/app-g-generate.js"
+    "app-g-generate": "bin/app-g-generate.js"
   },
   "repository": {
     "type": "git",
