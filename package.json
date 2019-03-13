@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/crushingCodes/APP-Screenshots-Batch-Generate/issues"
   },
-  "homepage": "https://github.com/crushingCodes/APP-Screenshots-Batch-Generate#readme"
+  "homepage": "https://github.com/crushingCodes/APP-Screenshots-Batch-Generate#readme",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.123"
+  }
 }

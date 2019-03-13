@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target":"esnext",
-        "watch": false,
+        "watch": true,
    //     "lib":{},
     }
 }

@@ -6,3 +6,5 @@
 *.tmp
 *.tmp.*
 log.txt
+node_modules/
+src/output/
