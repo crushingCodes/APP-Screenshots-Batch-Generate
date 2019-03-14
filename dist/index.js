@@ -1,9 +1,30 @@
+//import{OutputProfile} from "./output-profile";
+//import{ImageSpecs} from "./Image-Specs";
+//Config default locations
 const OutputFolder = './screensOut/';
-const inputFolder = './screensIn/';
-;
-//interface ImagesObject {fileName:FileName,imageObj:ImageObject};
-let testInputProfile = { width: 300, height: 200 };
-//console.log(getInputDimensions(testInputProfile));
+const InputFolder = './screensIn/';
+const sizeProfiles = {
+    "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
+    "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
+    "5.1": { dimensions: { longLength: 1280, shortLength: 800 }, platform: "android" },
+    "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
+};
+//interface OutputProfiles{(sizeName:string):OutputProfile};
+//interface ImageObject {fileName:FileName,dimensions:Dimensions};
+//Global Vars
+function getOutputDimensions(dimensionsInp) {
+    let dimensionsOut;
+    let tempProfile = sizeProfiles["5.5"];
+    //Auto decide which dimensions to use based on input size
+    if (dimensionsInp.orientation == "landscape") {
+        dimensionsOut = { width: tempProfile.dimensions.longLength, height: tempProfile.dimensions.shortLength, orientation: dimensionsInp.orientation };
+    }
+    else {
+        dimensionsOut = { width: tempProfile.dimensions.shortLength, height: tempProfile.dimensions.longLength,
+            orientation: dimensionsInp.orientation };
+    }
+    return dimensionsOut;
+}
 function getInputDimensions(width, height) {
     //Give input dimensions and return dimensions with correct size and orientation
     let dimensions;
@@ -15,48 +36,44 @@ function getInputDimensions(width, height) {
     }
     return dimensions;
 }
-/*
-var sizeOf = require('image-size');
-
-sizeOf('images/funny-cats.png', function (err, dimensions) {
-  console.log(dimensions.width, dimensions.height);
-});
-*/
 getImageInpObjects();
 function getImageInpObjects() {
     const fs = require('fs');
     const resizeImg = require('resize-img');
     let sizeOf = require('image-size');
     let inpImgPath = "";
-    let outImgDir = "";
     let outImgPath = "";
     let dimensionsIn;
-    const mkdirp = require('mkdirp');
-    outImgDir = OutputFolder + "size1/";
-    mkdirp(outImgDir, function (err) {
-        if (err)
-            console.error(err);
-        else
-            console.log('pow!');
-    });
-    //let newImageObj:ImageObject;
+    let dimensionsOut;
     let newImagesObj = {};
-    fs.readdirSync(inputFolder).forEach(file => {
-        inpImgPath = inputFolder + file;
+    initFolders();
+    //For each file found in input folder
+    fs.readdirSync(InputFolder).forEach((file) => {
+        inpImgPath = InputFolder + file;
         dimensionsIn = sizeOf(inpImgPath);
-        //console.log(dimensionsIn.width, dimensionsIn.height);
-        let newImageObj = {};
-        newImageObj = { fileName: file, dimensions: getInputDimensions(dimensionsIn.width, dimensionsIn.height) };
-        newImagesObj[file] = newImageObj;
+        newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height);
+        dimensionsOut = getOutputDimensions(newImagesObj[file]);
+        let outImgDir = OutputFolder;
         outImgPath = outImgDir + file;
         processImage(inpImgPath, outImgPath);
-        // resizeImg(fs.readFileSync(inpImgPath), {width: 128, height: 128}).then(buf => {
-        //     fs.writeFileSync(outImgPath, buf);
-        // });
-        //  console.log(newImageObj);
     });
     console.log(newImagesObj);
     return newImagesObj;
+}
+function initFolders() {
+    const mkdirp = require('mkdirp');
+    let outImgDir = "";
+    for (let profileKey in sizeProfiles) {
+        //let profileValue = sizeProfiles[profileKey];
+        outImgDir = OutputFolder + profileKey;
+        mkdirp(outImgDir, function (err) {
+            if (err)
+                console.error(err);
+            else {
+                console.log('pow! created ', outImgDir);
+            }
+        });
+    }
 }
 function processImage(inpImgPath, outImgPath) {
     const fs = require('fs');
