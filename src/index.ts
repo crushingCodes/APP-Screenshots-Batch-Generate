@@ -2,12 +2,13 @@
 import{ImageSpecs} from "./Image-Specs";
 
 import * as _ from "lodash";
+import { OutputProfile } from "./output-profile";
 
 type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension= number;
 const OutputFolder= './screensOut/';
-const inputFolder = './screensIn/';
+const InputFolder = './screensIn/';
 
 interface Dimensions {
     height:Dimension,
@@ -16,24 +17,48 @@ interface Dimensions {
 }
 
 interface SizeProfile {
-    width:Dimension,
-    height:Dimension,
+    length1:Dimension,
+    length2:Dimension,
+
     //This will allow creation of new keys
     //[key:string]:any,
 }
-interface OutputProfile{
-    dimensions:Dimensions,
-    platform:Platform
+
+interface OutputProf{
+  //  sizeName : string;
+     dimensions : SizeProfile;
+     platform : Platform;
+    
 }
+interface SizeProfiles{
+   [sizeName:string]: OutputProf
+}
+
+let sizeProfiles:SizeProfiles={
+    "5.5": {dimensions:{length1:2208,length2:1242},platform:"ios" },
+    "10.5": {dimensions:{length1:2224,length2:1668},platform:"ios" },
+    "5.1": {dimensions:{length1:1280,length2:800},platform:"android" },
+    "10": {dimensions:{length1:2560,length2:1700},platform:"android" },
+  };
+
+
+
+
+
+interface OutputProfiles{(sizeName:string):OutputProfile};
+
+//let profiles={(name:"5.5inch"):{sizeName:"5.5inch",dimensions:{length1:1000,length2:2000},platform:"android"}};
 type FileName=String;
 
 interface ImageObject {fileName:FileName,dimensions:Dimensions};
 //interface ImagesObject {fileName:FileName,imageObj:ImageObject};
 
 
-let testInputProfile:SizeProfile={width:300,height:200};
+//let testInputProfile:SizeProfile={width:300,height:200};
 
-//console.log(getInputDimensions(testInputProfile));
+function getOutputDimensions(){
+
+}
 
 function getInputDimensions(width:Dimension,height:Dimension):Dimensions{
     //Give input dimensions and return dimensions with correct size and orientation
@@ -46,13 +71,7 @@ function getInputDimensions(width:Dimension,height:Dimension):Dimensions{
     }
 return dimensions;
 }
-/*
-var sizeOf = require('image-size');
 
-sizeOf('images/funny-cats.png', function (err, dimensions) {
-  console.log(dimensions.width, dimensions.height);
-});
-*/
 getImageInpObjects();
 
 function getImageInpObjects(){
@@ -72,13 +91,11 @@ mkdirp(outImgDir, function (err) {
     else console.log('pow!')
 });
 
-//let newImageObj:ImageObject;
 let newImagesObj={};
 
-fs.readdirSync(inputFolder).forEach(file => {
+fs.readdirSync(InputFolder).forEach(file => {
 
-
-  inpImgPath=inputFolder+file;
+  inpImgPath=InputFolder+file;
    dimensionsIn = sizeOf(inpImgPath);
     let newImageObj={};
     newImageObj={fileName:file,dimensions:getInputDimensions(dimensionsIn.width, dimensionsIn.height)};
