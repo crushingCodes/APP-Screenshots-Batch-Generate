@@ -1,14 +1,24 @@
 //import{OutputProfile} from "./output-profile";
-import{ImageSpecs} from "./Image-Specs";
+//import{ImageSpecs} from "./Image-Specs";
 
 import * as _ from "lodash";
 import { OutputProfile } from "./output-profile";
 
+//Config default locations
+const OutputFolder= './screensOut/';
+const InputFolder = './screensIn/';
+
+const sizeProfiles:SizeProfiles={
+    "5.5": {dimensions:{longLength:2208,shortLength:1242},platform:"ios" },
+    "10.5": {dimensions:{longLength:2224,shortLength:1668},platform:"ios" },
+    "5.1": {dimensions:{longLength:1280,shortLength:800},platform:"android" },
+    "10": {dimensions:{longLength:2560,shortLength:1700},platform:"android" },
+  };
+
 type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension= number;
-const OutputFolder= './screensOut/';
-const InputFolder = './screensIn/';
+type FileName=String;
 
 interface Dimensions {
     height:Dimension,
@@ -17,53 +27,54 @@ interface Dimensions {
 }
 
 interface SizeProfile {
-    length1:Dimension,
-    length2:Dimension,
+    longLength:Dimension,
+    shortLength:Dimension,
 
     //This will allow creation of new keys
     //[key:string]:any,
 }
 
 interface OutputProf{
-  //  sizeName : string;
      dimensions : SizeProfile;
      platform : Platform;
-    
 }
 interface SizeProfiles{
-   [sizeName:string]: OutputProf
+   [sizeName:string]: OutputProf;
+}
+interface ImagesObject{
+    [fileName:string]:Dimensions;
 }
 
-let sizeProfiles:SizeProfiles={
-    "5.5": {dimensions:{length1:2208,length2:1242},platform:"ios" },
-    "10.5": {dimensions:{length1:2224,length2:1668},platform:"ios" },
-    "5.1": {dimensions:{length1:1280,length2:800},platform:"android" },
-    "10": {dimensions:{length1:2560,length2:1700},platform:"android" },
-  };
+
+//interface OutputProfiles{(sizeName:string):OutputProfile};
+//interface ImageObject {fileName:FileName,dimensions:Dimensions};
+
+  //Global Vars
+  let newImagesObj:ImagesObject;
 
 
 
 
+function getOutputDimensions(dimensionsInp:Dimensions):Dimensions{
+    let dimensionsOut:Dimensions;
+    let tempProfile=sizeProfiles["5.5"];
+    //Auto decide which dimensions to use based on input size
+    if(dimensionsInp.orientation=="landscape"){
+        dimensionsOut.width=tempProfile.dimensions.longLength;
+        dimensionsOut.height=tempProfile.dimensions.shortLength;
+        dimensionsOut.orientation=dimensionsInp.orientation;
+    }else{
+        dimensionsOut.width=tempProfile.dimensions.shortLength;
+        dimensionsOut.height=tempProfile.dimensions.longLength;
+        dimensionsOut.orientation=dimensionsInp.orientation;
+    }
 
-interface OutputProfiles{(sizeName:string):OutputProfile};
-
-//let profiles={(name:"5.5inch"):{sizeName:"5.5inch",dimensions:{length1:1000,length2:2000},platform:"android"}};
-type FileName=String;
-
-interface ImageObject {fileName:FileName,dimensions:Dimensions};
-//interface ImagesObject {fileName:FileName,imageObj:ImageObject};
-
-
-//let testInputProfile:SizeProfile={width:300,height:200};
-
-function getOutputDimensions(){
-
+    return dimensionsOut;
 }
 
 function getInputDimensions(width:Dimension,height:Dimension):Dimensions{
     //Give input dimensions and return dimensions with correct size and orientation
     let dimensions: Dimensions;
-
     if(width>=height){
         dimensions= {width:width,height:height,orientation:"landscape"};
     }else{
@@ -83,6 +94,7 @@ let inpImgPath="";
 let outImgDir="";
 let outImgPath="";
 let dimensionsIn;
+let dimensionsOut;
 
 const mkdirp = require('mkdirp');
 outImgDir=OutputFolder+"size1/";    
@@ -91,17 +103,19 @@ mkdirp(outImgDir, function (err) {
     else console.log('pow!')
 });
 
-let newImagesObj={};
 
 fs.readdirSync(InputFolder).forEach(file => {
 
   inpImgPath=InputFolder+file;
    dimensionsIn = sizeOf(inpImgPath);
-    let newImageObj={};
-    newImageObj={fileName:file,dimensions:getInputDimensions(dimensionsIn.width, dimensionsIn.height)};
-    newImagesObj[file]=newImageObj;
-    outImgPath=outImgDir+file;
+   dimensionsOut = getOutputDimensions(newImagesObj[file]);
 
+
+    //let newImageObj={};
+    //newImageObj={fileName:file,dimensions:getInputDimensions(dimensionsIn.width, dimensionsIn.height)};
+    //newImagesObj[file]=newImageObj;
+    newImagesObj[file]=getInputDimensions(dimensionsIn.width, dimensionsIn.height);
+    outImgPath=outImgDir+file;
     processImage(inpImgPath,outImgPath);
 });
 console.log(newImagesObj);
