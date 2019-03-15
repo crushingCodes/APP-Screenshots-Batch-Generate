@@ -1,8 +1,11 @@
 import * as _ from "lodash";
+import { mkdir } from "fs";
 
 //Config default locations
 const OutputFolder = './screensOut/';
 const InputFolder = './screensIn/';
+
+type Platform = "android" | "ios";
 
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
@@ -11,7 +14,6 @@ const sizeProfiles: SizeProfiles = {
     "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
 };
 
-type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
@@ -73,59 +75,48 @@ function getInputDimensions(width: Dimension, height: Dimension): Dimensions {
     }
     return dimensions;
 }
+let newImagesObj: ImagesObject = {};
+
 generateNewScreeshots();
 
 function generateNewScreeshots() {
 
     const fs = require('fs');
     let sizeOf = require('image-size');
-    let inpImgPath = "";
-    let outImgPath = "";
+    let inpImgPath:FName = "";
     let dimensionsIn: ImageSize;
-    let dimensionsOut: Dimensions;
-
-    let newImagesObj: ImagesObject = {};
-
-    let outImgDir = "";
-
-    initFolders();
 
     //For each file found in input folder
-    fs.readdirSync(InputFolder).forEach((file: FName) => {
-        //let outImgDir = "";
+    fs.readdirSync(InputFolder).forEach((fName: FName) => {
+        inpImgPath  = InputFolder + fName;
 
-        for (let profileName in sizeProfiles) {
+        for (let profileSizeName in sizeProfiles) {
 
-            outImgDir = OutputFolder + profileName;
-            inpImgPath = InputFolder + file;
             dimensionsIn = sizeOf(inpImgPath);
-            newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
-
-            dimensionsOut = getOutputDimensions(profileName, newImagesObj[file]);
-
-            outImgPath = outImgDir + "/" + file;
-
-            processImage(inpImgPath, outImgPath, dimensionsOut);
+            newImagesObj[fName] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
+           
+            processImage(fName, profileSizeName);
+       
         }
     });
 }
 
-function initFolders() {
-    const mkdirp = require('mkdirp');
-    let outImgDir = "";
-
-    for (let profileName in sizeProfiles) {
-        outImgDir = OutputFolder + profileName;
-        mkdirp(outImgDir, function (err) {
-            if (err) console.error(err)
-        });
-    }
-}
-
-function processImage(inpImgPath: string, outImgPath: string, dimensionsOut: Dimensions) {
-    const fs = require('fs');
+function processImage(fName:FName,profileSizeName:string) {
+    const fs = require('fs-extra');    
     const resizeImg = require('resize-img');
+    let inpImgPath :FName  = InputFolder + fName;
+
+   let dimensionsOut = getOutputDimensions(profileSizeName, newImagesObj[fName]);
+
     resizeImg(fs.readFileSync(inpImgPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
-        fs.writeFileSync(outImgPath, buf);
+       let outImgPath=OutputFolder+sizeProfiles[profileSizeName].platform+ "/" +profileSizeName;
+fs.ensureDir(outImgPath, err => {
+    if(err){
+    console.log(err); 
+    }
+ let fileFullPath=outImgPath+"/"+fName;
+        fs.writeFileSync(fileFullPath, buf);
+    })
+
     });
 }
