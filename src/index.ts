@@ -113,7 +113,7 @@ function getImageInpObjects() {
 
         outImgPath = outImgDir +"/"+ file;
 
-        processImage(inpImgPath, outImgPath);
+        processImage(inpImgPath, outImgPath,dimensionsOut);
         }
     });
     console.log(newImagesObj);
@@ -138,10 +138,10 @@ function initFolders() {
 
 }
 
-function processImage(inpImgPath: string, outImgPath: string) {
+function processImage(inpImgPath: string, outImgPath: string,dimensionsOut:Dimensions) {
     const fs = require('fs');
     const resizeImg = require('resize-img');
-    resizeImg(fs.readFileSync(inpImgPath), { width: 128, height: 128 }).then(buf => {
+    resizeImg(fs.readFileSync(inpImgPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
         fs.writeFileSync(outImgPath, buf);
     });
 }
