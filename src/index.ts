@@ -44,11 +44,6 @@ interface ImagesObject {
     [fileName: string]: Dimensions;
 }
 
-//Global Vars
-
-
-
-
 function getOutputDimensions(targetProfileName:string,dimensionsInp: Dimensions): Dimensions {
     let dimensionsOut: Dimensions;
     let tempProfile = sizeProfiles[targetProfileName];
@@ -74,12 +69,11 @@ function getInputDimensions(width: Dimension, height: Dimension): Dimensions {
     }
     return dimensions;
 }
-getImageInpObjects();
+generateNewScreeshots();
 
-function getImageInpObjects() {
+function generateNewScreeshots() {
 
     const fs = require('fs');
-    const resizeImg = require('resize-img');
     let sizeOf = require('image-size');
     let inpImgPath = "";
     let outImgPath = "";
@@ -110,7 +104,6 @@ function getImageInpObjects() {
         processImage(inpImgPath, outImgPath,dimensionsOut);
         }
     });
-    return newImagesObj;
 }
 
 function initFolders() {
