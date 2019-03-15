@@ -28,8 +28,7 @@ function getOutputDimensions(targetProfileName, dimensionsInp) {
 function getInputDimensions(inpImgPath) {
     //Give input dimensions and return dimensions with correct size and orientation
     let sizeOf = require('image-size');
-    let dimensionsIn;
-    dimensionsIn = sizeOf(inpImgPath);
+    let dimensionsIn = sizeOf(inpImgPath);
     let dimensions;
     if (dimensionsIn.width >= dimensionsIn.height) {
         dimensions = { width: dimensionsIn.width, height: dimensionsIn.height, orientation: "landscape" };
