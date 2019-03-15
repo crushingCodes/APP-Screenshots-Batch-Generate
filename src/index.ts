@@ -44,16 +44,20 @@ interface ImagesObject {
     [fileName: string]: Dimensions;
 }
 
-function getOutputDimensions(targetProfileName:string,dimensionsInp: Dimensions): Dimensions {
+function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
     let dimensionsOut: Dimensions;
     let tempProfile = sizeProfiles[targetProfileName];
     //Auto decide which dimensions to use based on input size
     if (dimensionsInp.orientation == "landscape") {
-        dimensionsOut={width:tempProfile.dimensions.longLength,height:tempProfile.dimensions.shortLength,
-            orientation:dimensionsInp.orientation};
+        dimensionsOut = {
+            width: tempProfile.dimensions.longLength, height: tempProfile.dimensions.shortLength,
+            orientation: dimensionsInp.orientation
+        };
     } else {
-        dimensionsOut={width:tempProfile.dimensions.shortLength,height:tempProfile.dimensions.longLength,
-            orientation:dimensionsInp.orientation};
+        dimensionsOut = {
+            width: tempProfile.dimensions.shortLength, height: tempProfile.dimensions.longLength,
+            orientation: dimensionsInp.orientation
+        };
     }
 
     return dimensionsOut;
@@ -77,31 +81,31 @@ function generateNewScreeshots() {
     let sizeOf = require('image-size');
     let inpImgPath = "";
     let outImgPath = "";
-    let dimensionsIn:ImageSize;
-    let dimensionsOut:Dimensions;
+    let dimensionsIn: ImageSize;
+    let dimensionsOut: Dimensions;
 
-    let newImagesObj: ImagesObject={};
+    let newImagesObj: ImagesObject = {};
 
     let outImgDir = "";
 
     initFolders();
 
     //For each file found in input folder
-    fs.readdirSync(InputFolder).forEach((file:FName) => {
+    fs.readdirSync(InputFolder).forEach((file: FName) => {
         //let outImgDir = "";
 
         for (let profileName in sizeProfiles) {
 
-        outImgDir = OutputFolder + profileName;
-        inpImgPath = InputFolder + file;
-        dimensionsIn = sizeOf(inpImgPath);
-        newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
+            outImgDir = OutputFolder + profileName;
+            inpImgPath = InputFolder + file;
+            dimensionsIn = sizeOf(inpImgPath);
+            newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
 
-        dimensionsOut = getOutputDimensions(profileName,newImagesObj[file]);
+            dimensionsOut = getOutputDimensions(profileName, newImagesObj[file]);
 
-        outImgPath = outImgDir +"/"+ file;
+            outImgPath = outImgDir + "/" + file;
 
-        processImage(inpImgPath, outImgPath,dimensionsOut);
+            processImage(inpImgPath, outImgPath, dimensionsOut);
         }
     });
 }
@@ -113,12 +117,12 @@ function initFolders() {
     for (let profileName in sizeProfiles) {
         outImgDir = OutputFolder + profileName;
         mkdirp(outImgDir, function (err) {
-            if (err) console.error(err) 
+            if (err) console.error(err)
         });
     }
 }
 
-function processImage(inpImgPath: string, outImgPath: string,dimensionsOut:Dimensions) {
+function processImage(inpImgPath: string, outImgPath: string, dimensionsOut: Dimensions) {
     const fs = require('fs');
     const resizeImg = require('resize-img');
     resizeImg(fs.readFileSync(inpImgPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
