@@ -68,8 +68,7 @@ function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimension
 function getInputDimensions(inpImgPath:FPath): Dimensions {
     //Give input dimensions and return dimensions with correct size and orientation
     let sizeOf = require('image-size');
-    let dimensionsIn: ImageSize;
-    dimensionsIn = sizeOf(inpImgPath);
+    let dimensionsIn: ImageSize = sizeOf(inpImgPath);
     let dimensions: Dimensions;
     
     if (dimensionsIn.width >= dimensionsIn.height) {

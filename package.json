@@ -4,12 +4,10 @@
   "description": "This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms. The original version will run primarily as a web app using Javascript. Currently creating npm version which can be added to anyones build scripts.",
   "main": "index.js",
   "scripts": {
-    "init": "mkdir dist && mkdir screensOut",
     "start": "tsc && node dist/index.js",
-    "generate": "dist/index.js",
-    "clean": "rm -r dist && mkdir dist && rm -r screensOut && mkdir screensOut",
-    "prebuild": "npm run clean",
-    "build": "npm run start"
+    "generate": "npm run clean && node dist/index.js",
+    "clean": "rm -r screensOut && mkdir screensOut",
+    "build": "tsc && node dist/index.js"
   },
   "bin": {
     "app-g-build": "bin/app-g-build.js",
