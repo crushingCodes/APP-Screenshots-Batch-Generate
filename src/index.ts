@@ -17,6 +17,8 @@ const sizeProfiles: SizeProfiles = {
 type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
+type FPath = string;
+
 
 interface Dimensions {
     height: Dimension,
@@ -43,7 +45,7 @@ interface SizeProfiles {
     [sizeName: string]: SizeProfile;
 }
 interface ImagesObject {
-    [fileName: string]: Dimensions;
+    [fileName: string]: {dimensions:Dimensions,fPath:FPath};
 }
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
@@ -93,7 +95,7 @@ function generateNewScreeshots() {
         for (let profileSizeName in sizeProfiles) {
 
             dimensionsIn = sizeOf(inpImgPath);
-            newImagesObj[fName] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
+            newImagesObj[fName] = {dimensions: getInputDimensions(dimensionsIn.width, dimensionsIn.height),fPath: inpImgPath};
            
             processImage(fName, profileSizeName);
        
@@ -104,11 +106,11 @@ function generateNewScreeshots() {
 function processImage(fName:FName,profileSizeName:string) {
     const fs = require('fs-extra');    
     const resizeImg = require('resize-img');
-    let inpImgPath :FName  = InputFolder + fName;
+   // let inpImgPath :FName  = InputFolder + fName;
 
-   let dimensionsOut = getOutputDimensions(profileSizeName, newImagesObj[fName]);
+   let dimensionsOut = getOutputDimensions(profileSizeName, newImagesObj[fName].dimensions);
 
-    resizeImg(fs.readFileSync(inpImgPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
+    resizeImg(fs.readFileSync(newImagesObj[fName].fPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
        let outImgPath=OutputFolder+sizeProfiles[profileSizeName].platform+ "/" +profileSizeName;
 fs.ensureDir(outImgPath, err => {
     if(err){
