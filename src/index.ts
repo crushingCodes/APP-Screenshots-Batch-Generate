@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import { mkdir } from "fs";
 
 //Config default locations
 const OutputFolder = './screensOut/';
@@ -18,7 +17,6 @@ type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
 type FPath = string;
-
 
 interface Dimensions {
     height: Dimension,
@@ -45,7 +43,7 @@ interface SizeProfiles {
     [sizeName: string]: SizeProfile;
 }
 interface ImagesObject {
-    [fileName: string]: {dimensions:Dimensions,fPath:FPath};
+    [fileName: string]: { dimensions: Dimensions, fPath: FPath };
 }
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
@@ -67,13 +65,17 @@ function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimension
     return dimensionsOut;
 }
 
-function getInputDimensions(width: Dimension, height: Dimension): Dimensions {
+function getInputDimensions(inpImgPath:FPath): Dimensions {
     //Give input dimensions and return dimensions with correct size and orientation
+    let sizeOf = require('image-size');
+    let dimensionsIn: ImageSize;
+    dimensionsIn = sizeOf(inpImgPath);
     let dimensions: Dimensions;
-    if (width >= height) {
-        dimensions = { width: width, height: height, orientation: "landscape" };
+    
+    if (dimensionsIn.width >= dimensionsIn.height) {
+        dimensions = { width: dimensionsIn.width, height: dimensionsIn.height, orientation: "landscape" };
     } else {
-        dimensions = { width: width, height: height, orientation: "portrait" }
+        dimensions = { width: dimensionsIn.width, height: dimensionsIn.height, orientation: "portrait" }
     }
     return dimensions;
 }
@@ -84,41 +86,39 @@ generateNewScreeshots();
 function generateNewScreeshots() {
 
     const fs = require('fs');
-    let sizeOf = require('image-size');
-    let inpImgPath:FName = "";
-    let dimensionsIn: ImageSize;
+    let inpImgPath: FName = "";
 
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((fName: FName) => {
-        inpImgPath  = InputFolder + fName;
+        inpImgPath = InputFolder + fName;
 
         for (let profileSizeName in sizeProfiles) {
 
-            dimensionsIn = sizeOf(inpImgPath);
-            newImagesObj[fName] = {dimensions: getInputDimensions(dimensionsIn.width, dimensionsIn.height),fPath: inpImgPath};
-           
+            newImagesObj[fName] = {
+                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+            };
+
             processImage(fName, profileSizeName);
-       
+
         }
     });
 }
 
-function processImage(fName:FName,profileSizeName:string) {
-    const fs = require('fs-extra');    
+function processImage(fName: FName, profileSizeName: string) {
+    const fs = require('fs-extra');
     const resizeImg = require('resize-img');
-   // let inpImgPath :FName  = InputFolder + fName;
+    let dimensionsOut = getOutputDimensions(profileSizeName, newImagesObj[fName].dimensions);
 
-   let dimensionsOut = getOutputDimensions(profileSizeName, newImagesObj[fName].dimensions);
-
-    resizeImg(fs.readFileSync(newImagesObj[fName].fPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
-       let outImgPath=OutputFolder+sizeProfiles[profileSizeName].platform+ "/" +profileSizeName;
-fs.ensureDir(outImgPath, err => {
-    if(err){
-    console.log(err); 
-    }
- let fileFullPath=outImgPath+"/"+fName;
-        fs.writeFileSync(fileFullPath, buf);
-    })
-
-    });
+    resizeImg(fs.readFileSync(newImagesObj[fName].fPath),
+        { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
+            let outImgPath = OutputFolder + sizeProfiles[profileSizeName].platform 
+            + "/" + profileSizeName;
+            fs.ensureDir(outImgPath, err => {
+                if (err) {
+                    console.log(err);
+                }
+                let fileFullPath = outImgPath + "/" + fName;
+                fs.writeFileSync(fileFullPath, buf);
+            })
+        });
 }
