@@ -9,15 +9,14 @@ const sizeProfiles = {
     "5.1": { dimensions: { longLength: 1280, shortLength: 800 }, platform: "android" },
     "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
 };
-//interface OutputProfiles{(sizeName:string):OutputProfile};
-//interface ImageObject {fileName:FileName,dimensions:Dimensions};
 //Global Vars
-function getOutputDimensions(dimensionsInp) {
+function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
-    let tempProfile = sizeProfiles["5.5"];
+    let tempProfile = sizeProfiles[targetProfileName];
     //Auto decide which dimensions to use based on input size
     if (dimensionsInp.orientation == "landscape") {
-        dimensionsOut = { width: tempProfile.dimensions.longLength, height: tempProfile.dimensions.shortLength, orientation: dimensionsInp.orientation };
+        dimensionsOut = { width: tempProfile.dimensions.longLength, height: tempProfile.dimensions.shortLength,
+            orientation: dimensionsInp.orientation };
     }
     else {
         dimensionsOut = { width: tempProfile.dimensions.shortLength, height: tempProfile.dimensions.longLength,
@@ -56,12 +55,11 @@ function getImageInpObjects() {
             inpImgPath = InputFolder + file;
             dimensionsIn = sizeOf(inpImgPath);
             newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height);
-            dimensionsOut = getOutputDimensions(newImagesObj[file]);
+            dimensionsOut = getOutputDimensions(profileName, newImagesObj[file]);
             outImgPath = outImgDir + "/" + file;
-            processImage(inpImgPath, outImgPath);
+            processImage(inpImgPath, outImgPath, dimensionsOut);
         }
     });
-    console.log(newImagesObj);
     return newImagesObj;
 }
 function initFolders() {
@@ -72,17 +70,13 @@ function initFolders() {
         mkdirp(outImgDir, function (err) {
             if (err)
                 console.error(err);
-            else {
-                console.log('pow! created ', outImgDir);
-            }
         });
     }
-    //let profileValue = sizeProfiles[profileKey];
 }
-function processImage(inpImgPath, outImgPath) {
+function processImage(inpImgPath, outImgPath, dimensionsOut) {
     const fs = require('fs');
     const resizeImg = require('resize-img');
-    resizeImg(fs.readFileSync(inpImgPath), { width: 128, height: 128 }).then(buf => {
+    resizeImg(fs.readFileSync(inpImgPath), { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
         fs.writeFileSync(outImgPath, buf);
     });
 }

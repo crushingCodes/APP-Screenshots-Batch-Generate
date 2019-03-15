@@ -1,8 +1,4 @@
-//import{OutputProfile} from "./output-profile";
-//import{ImageSpecs} from "./Image-Specs";
-
 import * as _ from "lodash";
-import { OutputProfile } from "./output-profile";
 
 //Config default locations
 const OutputFolder = './screensOut/';
@@ -29,9 +25,11 @@ interface Dimensions {
 interface ProfileDimensions {
     longLength: Dimension,
     shortLength: Dimension,
+}
 
-    //This will allow creation of new keys
-    //[key:string]:any,
+interface ImageSize {
+    width: Dimension,
+    height: Dimension,
 }
 
 interface SizeProfile {
@@ -46,25 +44,21 @@ interface ImagesObject {
     [fileName: string]: Dimensions;
 }
 
-
-//interface OutputProfiles{(sizeName:string):OutputProfile};
-//interface ImageObject {fileName:FileName,dimensions:Dimensions};
-
 //Global Vars
 
 
 
 
-function getOutputDimensions(dimensionsInp: Dimensions): Dimensions {
+function getOutputDimensions(targetProfileName:string,dimensionsInp: Dimensions): Dimensions {
     let dimensionsOut: Dimensions;
-    let tempProfile = sizeProfiles["5.5"];
+    let tempProfile = sizeProfiles[targetProfileName];
     //Auto decide which dimensions to use based on input size
     if (dimensionsInp.orientation == "landscape") {
-        dimensionsOut={width:tempProfile.dimensions.longLength,height:tempProfile.dimensions.shortLength,orientation:dimensionsInp.orientation}
+        dimensionsOut={width:tempProfile.dimensions.longLength,height:tempProfile.dimensions.shortLength,
+            orientation:dimensionsInp.orientation};
     } else {
-        dimensionsOut={width:tempProfile.dimensions.shortLength,height:tempProfile.dimensions.longLength
-            ,orientation:dimensionsInp.orientation}
-
+        dimensionsOut={width:tempProfile.dimensions.shortLength,height:tempProfile.dimensions.longLength,
+            orientation:dimensionsInp.orientation};
     }
 
     return dimensionsOut;
@@ -89,8 +83,8 @@ function getImageInpObjects() {
     let sizeOf = require('image-size');
     let inpImgPath = "";
     let outImgPath = "";
-    let dimensionsIn;
-    let dimensionsOut;
+    let dimensionsIn:ImageSize;
+    let dimensionsOut:Dimensions;
 
     let newImagesObj: ImagesObject={};
 
@@ -109,15 +103,13 @@ function getImageInpObjects() {
         dimensionsIn = sizeOf(inpImgPath);
         newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height)
 
-        dimensionsOut = getOutputDimensions(newImagesObj[file]);
+        dimensionsOut = getOutputDimensions(profileName,newImagesObj[file]);
 
         outImgPath = outImgDir +"/"+ file;
 
         processImage(inpImgPath, outImgPath,dimensionsOut);
         }
     });
-    console.log(newImagesObj);
-
     return newImagesObj;
 }
 
@@ -128,14 +120,9 @@ function initFolders() {
     for (let profileName in sizeProfiles) {
         outImgDir = OutputFolder + profileName;
         mkdirp(outImgDir, function (err) {
-            if (err) console.error(err)
-            else {
-                console.log('pow! created ',outImgDir);
-            }
+            if (err) console.error(err) 
         });
     }
-            //let profileValue = sizeProfiles[profileKey];
-
 }
 
 function processImage(inpImgPath: string, outImgPath: string,dimensionsOut:Dimensions) {
