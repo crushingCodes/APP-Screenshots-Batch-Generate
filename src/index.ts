@@ -111,7 +111,7 @@ function getImageInpObjects() {
 
         dimensionsOut = getOutputDimensions(newImagesObj[file]);
 
-        outImgPath = outImgDir + file;
+        outImgPath = outImgDir +"/"+ file;
 
         processImage(inpImgPath, outImgPath);
         }

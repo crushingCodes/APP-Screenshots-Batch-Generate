@@ -46,16 +46,20 @@ function getImageInpObjects() {
     let dimensionsIn;
     let dimensionsOut;
     let newImagesObj = {};
+    let outImgDir = "";
     initFolders();
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((file) => {
-        inpImgPath = InputFolder + file;
-        dimensionsIn = sizeOf(inpImgPath);
-        newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height);
-        dimensionsOut = getOutputDimensions(newImagesObj[file]);
-        let outImgDir = OutputFolder;
-        outImgPath = outImgDir + file;
-        processImage(inpImgPath, outImgPath);
+        //let outImgDir = "";
+        for (let profileName in sizeProfiles) {
+            outImgDir = OutputFolder + profileName;
+            inpImgPath = InputFolder + file;
+            dimensionsIn = sizeOf(inpImgPath);
+            newImagesObj[file] = getInputDimensions(dimensionsIn.width, dimensionsIn.height);
+            dimensionsOut = getOutputDimensions(newImagesObj[file]);
+            outImgPath = outImgDir + "/" + file;
+            processImage(inpImgPath, outImgPath);
+        }
     });
     console.log(newImagesObj);
     return newImagesObj;
@@ -63,9 +67,8 @@ function getImageInpObjects() {
 function initFolders() {
     const mkdirp = require('mkdirp');
     let outImgDir = "";
-    for (let profileKey in sizeProfiles) {
-        //let profileValue = sizeProfiles[profileKey];
-        outImgDir = OutputFolder + profileKey;
+    for (let profileName in sizeProfiles) {
+        outImgDir = OutputFolder + profileName;
         mkdirp(outImgDir, function (err) {
             if (err)
                 console.error(err);
@@ -74,6 +77,7 @@ function initFolders() {
             }
         });
     }
+    //let profileValue = sizeProfiles[profileKey];
 }
 function processImage(inpImgPath, outImgPath) {
     const fs = require('fs');
