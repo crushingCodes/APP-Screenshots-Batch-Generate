@@ -8,3 +8,5 @@
 log.txt
 node_modules/
 src/output/
+screensOut/
+screensIn/
