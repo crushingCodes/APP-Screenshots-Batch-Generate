@@ -11,3 +11,4 @@ src/output/
 screensOut/*
 screensIn/*
 temp/
+*.tgz
