@@ -1,8 +1,6 @@
 import * as _ from "lodash";
 
 //Config default locations
-let OutputFolder:string;
-let InputFolder:string;
 
 type Platform = "android" | "ios";
 
@@ -53,11 +51,15 @@ const Configstore = require('configstore');
 const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
 
+//Global Variables
+let OutputFolder:string;
+let InputFolder:string;
+
 loadConfig();
 
 function initConfig(){
-    conf.set('inputTargetURL','../screensOut/');
-    conf.set('outputTargetURL','../screensIn/');
+    conf.set('inputTargetURL','./screensIn/');
+    conf.set('outputTargetURL','./screensOut/');
     console.log('Config Init');
 
 }
@@ -110,7 +112,7 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
 }
 let newImagesObj: ImagesObject = {};
 
-//generateNewScreeshots();
+generateNewScreeshots();
 
 function generateNewScreeshots() {
 
