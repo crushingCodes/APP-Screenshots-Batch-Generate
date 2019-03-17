@@ -1,12 +1,35 @@
 //Config default locations
-const OutputFolder = './screensOut/';
-const InputFolder = './screensIn/';
+let OutputFolder;
+let InputFolder;
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
     "5.1": { dimensions: { longLength: 1280, shortLength: 800 }, platform: "android" },
     "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
 };
+let config = {
+    keyvalue: []
+};
+const Configstore = require('configstore');
+const pkg = require('../package.json');
+const conf = new Configstore(pkg.name);
+loadConfig();
+function initConfig() {
+    conf.set('inputTargetURL', './screensOut/');
+    conf.set('outputTargetURL', './screensIn/');
+    console.log('Config Init');
+}
+function loadConfig() {
+    if (conf.get('inputTargetURL') == null || conf.get('outputTargetURL') == null) {
+        initConfig();
+    }
+    else {
+        OutputFolder = conf.get('inputTargetURL');
+        InputFolder = conf.get('outputTargetURL');
+    }
+    console.log('Input Folder: ', InputFolder);
+    console.log('Ouput Folder: ', OutputFolder);
+}
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
     let tempProfile = sizeProfiles[targetProfileName];

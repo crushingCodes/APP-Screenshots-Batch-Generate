@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 
 //Config default locations
-const OutputFolder = './screensOut/';
-const InputFolder = './screensIn/';
+let OutputFolder:string;
+let InputFolder:string;
 
 type Platform = "android" | "ios";
 
@@ -46,6 +46,33 @@ interface ImagesObject {
     [fileName: string]: { dimensions: Dimensions, fPath: FPath };
 }
 
+let config={
+    keyvalue:[]
+};
+const Configstore = require('configstore');
+const pkg = require('../package.json');
+const conf = new Configstore(pkg.name);
+
+loadConfig();
+
+function initConfig(){
+    conf.set('inputTargetURL','./screensOut/');
+    conf.set('outputTargetURL','./screensIn/');
+    console.log('Config Init');
+
+}
+function loadConfig(){
+
+    if(conf.get('inputTargetURL')==null || conf.get('outputTargetURL')==null){
+        initConfig();
+    }else{
+         OutputFolder = conf.get('inputTargetURL');
+         InputFolder =conf.get('outputTargetURL');
+    }    
+    console.log('Input Folder: ',InputFolder);
+    console.log('Ouput Folder: ',OutputFolder);
+
+}
 
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
@@ -82,7 +109,7 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
 }
 let newImagesObj: ImagesObject = {};
 
-generateNewScreeshots();
+//generateNewScreeshots();
 
 function generateNewScreeshots() {
 

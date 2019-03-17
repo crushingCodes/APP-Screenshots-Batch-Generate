@@ -28,6 +28,7 @@
   "homepage": "https://github.com/crushingCodes/APP-Screenshots-Batch-Generate#readme",
   "dependencies": {
     "@types/node": "^11.11.3",
+    "configstore": "^4.0.0",
     "fs-extra": "^7.0.1",
     "image-size": "^0.7.2",
     "lodash": "^4.17.11",
