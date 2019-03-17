@@ -46,6 +46,8 @@ interface ImagesObject {
     [fileName: string]: { dimensions: Dimensions, fPath: FPath };
 }
 
+
+
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
     let dimensionsOut: Dimensions;
     let tempProfile = sizeProfiles[targetProfileName];
