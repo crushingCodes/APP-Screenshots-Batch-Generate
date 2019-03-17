@@ -77,12 +77,28 @@ function loadConfig(){
 }
 
 
-
-var updateConfigByConfigKey = function(configKey:ConfigKey,inputPath:FPath){
+function updateConfigByConfigKey(configKey,inputPath:FPath){
     conf.set(configKey,inputPath);
 }
-exports.updateConfigByConfigKey = updateConfigByConfigKey;
+var updateConfigInput = function(inputPath:FPath){
+    updateConfigByConfigKey(configKeys.inputTargetURL,inputPath)
+}
+exports.updateConfigInput = updateConfigInput;
 
+var updateConfigOutput = function(inputPath:FPath){
+    updateConfigByConfigKey(configKeys.outputTargetURL,inputPath)
+}
+exports.updateConfigOutput = updateConfigOutput;
+
+var getConfigPrintout = function(){
+    outputFolder = conf.get(configKeys.outputTargetURL);
+    inputFolder =conf.get(configKeys.inputTargetURL);
+    console.log('Configuration');
+    console.log();
+console.log('Input Folder: ',inputFolder);
+console.log('Ouput Folder: ',outputFolder);
+}
+exports.getConfigPrintout = getConfigPrintout;
 
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {

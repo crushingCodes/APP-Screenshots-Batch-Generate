@@ -30,10 +30,26 @@ function loadConfig() {
     console.log('Input Folder: ', inputFolder);
     console.log('Ouput Folder: ', outputFolder);
 }
-var updateConfigByConfigKey = function (configKey, inputPath) {
+function updateConfigByConfigKey(configKey, inputPath) {
     conf.set(configKey, inputPath);
+}
+var updateConfigInput = function (inputPath) {
+    updateConfigByConfigKey(configKeys.inputTargetURL, inputPath);
 };
-exports.updateConfigByConfigKey = updateConfigByConfigKey;
+exports.updateConfigInput = updateConfigInput;
+var updateConfigOutput = function (inputPath) {
+    updateConfigByConfigKey(configKeys.outputTargetURL, inputPath);
+};
+exports.updateConfigOutput = updateConfigOutput;
+var getConfigPrintout = function () {
+    outputFolder = conf.get(configKeys.outputTargetURL);
+    inputFolder = conf.get(configKeys.inputTargetURL);
+    console.log('Configuration');
+    console.log();
+    console.log('Input Folder: ', inputFolder);
+    console.log('Ouput Folder: ', outputFolder);
+};
+exports.getConfigPrintout = getConfigPrintout;
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
     let tempProfile = sizeProfiles[targetProfileName];
