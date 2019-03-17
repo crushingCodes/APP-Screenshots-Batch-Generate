@@ -54,6 +54,7 @@ const conf = new Configstore(pkg.name);
 //Global Variables
 let OutputFolder:string;
 let InputFolder:string;
+let newImagesObj: ImagesObject = {};
 
 loadConfig();
 
@@ -109,7 +110,6 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
     }
     return dimensions;
 }
-let newImagesObj: ImagesObject = {};
 
 
 function generateNewScreeshots() {

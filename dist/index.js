@@ -13,6 +13,7 @@ const conf = new Configstore(pkg.name);
 //Global Variables
 let OutputFolder;
 let InputFolder;
+let newImagesObj = {};
 loadConfig();
 function initConfig() {
     conf.set('inputTargetURL', './screensIn/');
@@ -20,7 +21,6 @@ function initConfig() {
     console.log('Config Init');
 }
 function loadConfig() {
-    initConfig();
     if (conf.get('inputTargetURL') == null || conf.get('outputTargetURL') == null) {
         initConfig();
     }
@@ -63,15 +63,14 @@ function getInputDimensions(inpImgPath) {
     }
     return dimensions;
 }
-let newImagesObj = {};
 function generateNewScreeshots() {
+    const isImage = require('is-image');
     const fs = require('fs');
     let inpImgPath = "";
     console.log("gen called ", InputFolder);
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((fName) => {
         inpImgPath = InputFolder + fName;
-        const isImage = require('is-image');
         console.log(inpImgPath);
         if (isImage(inpImgPath)) {
             for (let profileSizeName in sizeProfiles) {
