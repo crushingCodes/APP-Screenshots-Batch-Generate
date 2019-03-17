@@ -56,12 +56,13 @@ const conf = new Configstore(pkg.name);
 loadConfig();
 
 function initConfig(){
-    conf.set('inputTargetURL','./screensOut/');
-    conf.set('outputTargetURL','./screensIn/');
+    conf.set('inputTargetURL','../screensOut/');
+    conf.set('outputTargetURL','../screensIn/');
     console.log('Config Init');
 
 }
 function loadConfig(){
+    initConfig();
 
     if(conf.get('inputTargetURL')==null || conf.get('outputTargetURL')==null){
         initConfig();
