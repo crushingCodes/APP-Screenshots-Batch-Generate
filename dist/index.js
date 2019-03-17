@@ -1,6 +1,3 @@
-//Config default locations
-let OutputFolder;
-let InputFolder;
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
@@ -13,6 +10,9 @@ let config = {
 const Configstore = require('configstore');
 const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
+//Global Variables
+let OutputFolder;
+let InputFolder;
 loadConfig();
 function initConfig() {
     conf.set('inputTargetURL', './screensIn/');
@@ -25,11 +25,12 @@ function loadConfig() {
         initConfig();
     }
     else {
-        OutputFolder = conf.get('inputTargetURL');
-        InputFolder = conf.get('outputTargetURL');
+        OutputFolder = conf.get('outputTargetURL');
+        InputFolder = conf.get('inputTargetURL');
     }
     console.log('Input Folder: ', InputFolder);
     console.log('Ouput Folder: ', OutputFolder);
+    generateNewScreeshots();
 }
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
@@ -63,18 +64,22 @@ function getInputDimensions(inpImgPath) {
     return dimensions;
 }
 let newImagesObj = {};
-generateNewScreeshots();
 function generateNewScreeshots() {
     const fs = require('fs');
     let inpImgPath = "";
+    console.log("gen called ", InputFolder);
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((fName) => {
         inpImgPath = InputFolder + fName;
-        for (let profileSizeName in sizeProfiles) {
-            newImagesObj[fName] = {
-                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-            };
-            processImage(fName, profileSizeName);
+        const isImage = require('is-image');
+        console.log(inpImgPath);
+        if (isImage(inpImgPath)) {
+            for (let profileSizeName in sizeProfiles) {
+                newImagesObj[fName] = {
+                    dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                };
+                processImage(fName, profileSizeName);
+            }
         }
     });
 }

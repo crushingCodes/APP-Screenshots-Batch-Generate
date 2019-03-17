@@ -64,16 +64,15 @@ function initConfig(){
 
 }
 function loadConfig(){
-    initConfig();
-
     if(conf.get('inputTargetURL')==null || conf.get('outputTargetURL')==null){
         initConfig();
     }else{
-         OutputFolder = conf.get('inputTargetURL');
-         InputFolder =conf.get('outputTargetURL');
+         OutputFolder = conf.get('outputTargetURL');
+         InputFolder =conf.get('inputTargetURL');
     }    
     console.log('Input Folder: ',InputFolder);
     console.log('Ouput Folder: ',OutputFolder);
+    generateNewScreeshots();
 
 }
 
@@ -112,17 +111,19 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
 }
 let newImagesObj: ImagesObject = {};
 
-generateNewScreeshots();
 
 function generateNewScreeshots() {
 
     const fs = require('fs');
     let inpImgPath: FName = "";
+    console.log("gen called ",InputFolder);
 
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((fName: FName) => {
         inpImgPath = InputFolder + fName;
-
+        const isImage = require('is-image');
+        console.log(inpImgPath)
+        if (isImage(inpImgPath)) {
         for (let profileSizeName in sizeProfiles) {
 
             newImagesObj[fName] = {
@@ -132,6 +133,7 @@ function generateNewScreeshots() {
             processImage(fName, profileSizeName);
 
         }
+    }
     });
 }
 

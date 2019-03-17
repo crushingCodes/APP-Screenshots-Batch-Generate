@@ -3,10 +3,8 @@
         "target":"esnext",
         "watch": false,
         "outDir": "dist"
-   //     "lib":{},
     },
     "include": [
-       // "src/**/*.ts"
        "ts/*.ts"
       ],
       "exclude": [
