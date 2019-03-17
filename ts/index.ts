@@ -113,6 +113,7 @@ let newImagesObj: ImagesObject = {};
 
 
 function generateNewScreeshots() {
+    const isImage = require('is-image');
 
     const fs = require('fs');
     let inpImgPath: FName = "";
@@ -121,7 +122,6 @@ function generateNewScreeshots() {
     //For each file found in input folder
     fs.readdirSync(InputFolder).forEach((fName: FName) => {
         inpImgPath = InputFolder + fName;
-        const isImage = require('is-image');
         console.log(inpImgPath)
         if (isImage(inpImgPath)) {
         for (let profileSizeName in sizeProfiles) {
