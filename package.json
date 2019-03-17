@@ -13,7 +13,7 @@
     "app-g-build": "bin/app-g-build.js",
     "app-g-build-silent": "bin/app-g-build-silent.js",
     "app-g-generate": "bin/app-g-generate.js",
-    "dosomethingawesome": "./bin/demo-global.js"
+    "dosomethingawesome": "./bin/commands.js"
   },
   "preferGlobal": true,
   "repository": {

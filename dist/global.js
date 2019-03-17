@@ -1,4 +1,13 @@
-var say = function (string_to_say) {
-    return console.log(string_to_say);
+var printVersion = function () {
+    return console.log("1.00");
 };
-exports.say = say;
+exports.printVersion = printVersion;
+var printHelp = function () {
+    console.log("App Screen Generator");
+    console.log();
+    console.log("-v Version");
+    console.log("--in Configure Screenshots in");
+    console.log("--out Configure Screenshots out");
+    return console.log();
+};
+exports.printHelp = printHelp;
