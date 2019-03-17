@@ -15,6 +15,7 @@ type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
 type FPath = string;
+type ConfigKey = "inputTargetURL" | "outputTargetURL"
 const configKeys= {inputTargetURL:"inputTargetURL",outputTargetURL:"outputTargetURL"}
 
 interface Dimensions {
@@ -75,9 +76,13 @@ function loadConfig(){
 
 }
 
-function updateConfigByConfigKey(configKey,inputPath){
+
+
+var updateConfigByConfigKey = function(configKey:ConfigKey,inputPath:FPath){
     conf.set(configKey,inputPath);
 }
+exports.updateConfigByConfigKey = updateConfigByConfigKey;
+
 
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
@@ -113,8 +118,8 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
     return dimensions;
 }
 
-generateNewScreeshots();
-function generateNewScreeshots() {
+
+    var generateNewScreeshots = function() {
     loadConfig();
 
     const isImage = require('is-image');
@@ -141,6 +146,7 @@ function generateNewScreeshots() {
     });
 }
 
+exports.generateNewScreeshots = generateNewScreeshots;
 function processImage(fName: FName, profileSizeName: string) {
     const fs = require('fs-extra');
     const resizeImg = require('resize-img');

@@ -30,9 +30,10 @@ function loadConfig() {
     console.log('Input Folder: ', inputFolder);
     console.log('Ouput Folder: ', outputFolder);
 }
-function updateConfigByConfigKey(configKey, inputPath) {
+var updateConfigByConfigKey = function (configKey, inputPath) {
     conf.set(configKey, inputPath);
-}
+};
+exports.updateConfigByConfigKey = updateConfigByConfigKey;
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
     let tempProfile = sizeProfiles[targetProfileName];
@@ -64,8 +65,7 @@ function getInputDimensions(inpImgPath) {
     }
     return dimensions;
 }
-generateNewScreeshots();
-function generateNewScreeshots() {
+var generateNewScreeshots = function () {
     loadConfig();
     const isImage = require('is-image');
     const fs = require('fs');
@@ -84,7 +84,8 @@ function generateNewScreeshots() {
             }
         }
     });
-}
+};
+exports.generateNewScreeshots = generateNewScreeshots;
 function processImage(fName, profileSizeName) {
     const fs = require('fs-extra');
     const resizeImg = require('resize-img');
