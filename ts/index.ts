@@ -15,6 +15,7 @@ type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
 type FPath = string;
+const configKeys= {inputTargetURL:"inputTargetURL",outputTargetURL:"outputTargetURL"}
 
 interface Dimensions {
     height: Dimension,
@@ -44,38 +45,36 @@ interface ImagesObject {
     [fileName: string]: { dimensions: Dimensions, fPath: FPath };
 }
 
-let config={
-    keyvalue:[]
-};
 const Configstore = require('configstore');
 const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
 
 //Global Variables
-let OutputFolder:string;
-let InputFolder:string;
+let outputFolder:string;
+let inputFolder:string;
 let newImagesObj: ImagesObject = {};
 
-loadConfig();
+//Start
 
 function initConfig(){
-    conf.set('inputTargetURL','./screensIn/');
-    conf.set('outputTargetURL','./screensOut/');
-    console.log('Config Init');
+    //Set default folder locations
+    conf.set(configKeys.inputTargetURL,'./screensIn/');
+    conf.set(configKeys.outputTargetURL,'./screensOut/');
+    console.log('Default config set');
 
 }
 function loadConfig(){
-    if(conf.get('inputTargetURL')==null || conf.get('outputTargetURL')==null){
+    if(conf.get(configKeys.inputTargetURL)==null || conf.get(configKeys.outputTargetURL)==null){
         initConfig();
     }else{
-         OutputFolder = conf.get('outputTargetURL');
-         InputFolder =conf.get('inputTargetURL');
+         outputFolder = conf.get(configKeys.outputTargetURL);
+         inputFolder =conf.get(configKeys.inputTargetURL);
     }    
-    console.log('Input Folder: ',InputFolder);
-    console.log('Ouput Folder: ',OutputFolder);
-    generateNewScreeshots();
+    console.log('Input Folder: ',inputFolder);
+    console.log('Ouput Folder: ',outputFolder);
 
 }
+
 
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
@@ -111,18 +110,20 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
     return dimensions;
 }
 
-
+generateNewScreeshots();
 function generateNewScreeshots() {
+    loadConfig();
+
     const isImage = require('is-image');
 
     const fs = require('fs');
     let inpImgPath: FName = "";
-    console.log("gen called ",InputFolder);
+    console.log("Generate called for: ",inputFolder);
 
     //For each file found in input folder
-    fs.readdirSync(InputFolder).forEach((fName: FName) => {
-        inpImgPath = InputFolder + fName;
-        console.log(inpImgPath)
+    fs.readdirSync(inputFolder).forEach((fName: FName) => {
+        inpImgPath = inputFolder + fName;
+        console.log("Processing: ",inpImgPath)
         if (isImage(inpImgPath)) {
         for (let profileSizeName in sizeProfiles) {
 
@@ -144,7 +145,7 @@ function processImage(fName: FName, profileSizeName: string) {
 
     resizeImg(fs.readFileSync(newImagesObj[fName].fPath),
         { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
-            let outImgPath = OutputFolder + sizeProfiles[profileSizeName].platform 
+            let outImgPath = outputFolder + sizeProfiles[profileSizeName].platform 
             + "/" + profileSizeName;
             fs.ensureDir(outImgPath, err => {
                 if (err) {
