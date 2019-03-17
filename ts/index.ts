@@ -75,6 +75,9 @@ function loadConfig(){
 
 }
 
+function updateConfigByConfigKey(configKey,inputPath){
+    conf.set(configKey,inputPath);
+}
 
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
