@@ -16,7 +16,7 @@ type Dimension = number;
 type FName = string;
 type FPath = string;
 type ConfigKey = "inputTargetURL" | "outputTargetURL"
-const configKeys= {inputTargetURL:"inputTargetURL",outputTargetURL:"outputTargetURL"}
+const configKeys = { inputTargetURL: "inputTargetURL", outputTargetURL: "outputTargetURL" }
 
 interface Dimensions {
     height: Dimension,
@@ -51,55 +51,48 @@ const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
 
 //Global Variables
-let outputFolder:string;
-let inputFolder:string;
+let outputFolder: string;
+let inputFolder: string;
 let newImagesObj: ImagesObject = {};
 
-//Start
-
-function initConfig(){
+function initConfig() {
     //Set default folder locations
-    conf.set(configKeys.inputTargetURL,'./screensIn/');
-    conf.set(configKeys.outputTargetURL,'./screensOut/');
+    conf.set(configKeys.inputTargetURL, './screensIn/');
+    conf.set(configKeys.outputTargetURL, './screensOut/');
     console.log('Default config set');
 
 }
-function loadConfig(){
-    if(conf.get(configKeys.inputTargetURL)==null || conf.get(configKeys.outputTargetURL)==null){
+function loadConfig() {
+    if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
         initConfig();
-    }else{
-         outputFolder = conf.get(configKeys.outputTargetURL);
-         inputFolder =conf.get(configKeys.inputTargetURL);
-    }    
-    console.log('Input Folder: ',inputFolder);
-    console.log('Ouput Folder: ',outputFolder);
-
+    } else {
+        outputFolder = conf.get(configKeys.outputTargetURL);
+        inputFolder = conf.get(configKeys.inputTargetURL);
+    }
 }
 
-
-function updateConfigByConfigKey(configKey,inputPath:FPath){
-    conf.set(configKey,inputPath);
+function updateConfigByConfigKey(configKey, inputPath: FPath) {
+    conf.set(configKey, inputPath);
 }
-var updateConfigInput = function(inputPath:FPath){
-    updateConfigByConfigKey(configKeys.inputTargetURL,inputPath)
+var updateConfigInput = function (inputPath: FPath) {
+        //route the function to the correct configKey
+    updateConfigByConfigKey(configKeys.inputTargetURL, inputPath)
 }
-exports.updateConfigInput = updateConfigInput;
 
-var updateConfigOutput = function(inputPath:FPath){
-    updateConfigByConfigKey(configKeys.outputTargetURL,inputPath)
+var updateConfigOutput = function (inputPath: FPath) {
+        //route the function to the correct configKey
+    updateConfigByConfigKey(configKeys.outputTargetURL, inputPath)
 }
-exports.updateConfigOutput = updateConfigOutput;
 
-var getConfigPrintout = function(){
+var showConfigPrintout = function () {
     outputFolder = conf.get(configKeys.outputTargetURL);
-    inputFolder =conf.get(configKeys.inputTargetURL);
+    inputFolder = conf.get(configKeys.inputTargetURL);
+    console.log();
     console.log('Configuration');
     console.log();
-console.log('Input Folder: ',inputFolder);
-console.log('Ouput Folder: ',outputFolder);
+    console.log('Input Folder: ', inputFolder);
+    console.log('Ouput Folder: ', outputFolder);
 }
-exports.getConfigPrintout = getConfigPrintout;
-
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {
     let dimensionsOut: Dimensions;
@@ -120,12 +113,12 @@ function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimension
     return dimensionsOut;
 }
 
-function getInputDimensions(inpImgPath:FPath): Dimensions {
+function getInputDimensions(inpImgPath: FPath): Dimensions {
     //Give input dimensions and return dimensions with correct size and orientation
     let sizeOf = require('image-size');
     let dimensionsIn: ImageSize = sizeOf(inpImgPath);
     let dimensions: Dimensions;
-    
+
     if (dimensionsIn.width >= dimensionsIn.height) {
         dimensions = { width: dimensionsIn.width, height: dimensionsIn.height, orientation: "landscape" };
     } else {
@@ -134,35 +127,35 @@ function getInputDimensions(inpImgPath:FPath): Dimensions {
     return dimensions;
 }
 
-
-    var generateNewScreeshots = function() {
+var generateNewScreeshots = function () {
     loadConfig();
 
     const isImage = require('is-image');
 
     const fs = require('fs');
     let inpImgPath: FName = "";
-    console.log("Generate called for: ",inputFolder);
+    let count=0;
+    console.log("Generate called for: ", inputFolder);
 
     //For each file found in input folder
     fs.readdirSync(inputFolder).forEach((fName: FName) => {
         inpImgPath = inputFolder + fName;
-        console.log("Processing: ",inpImgPath)
         if (isImage(inpImgPath)) {
-        for (let profileSizeName in sizeProfiles) {
+            console.log("Processing: ", inpImgPath);
+            count+=1;
+            for (let profileSizeName in sizeProfiles) {
 
-            newImagesObj[fName] = {
-                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-            };
-
-            processImage(fName, profileSizeName);
-
+                newImagesObj[fName] = {
+                    dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                };
+                processImage(fName, profileSizeName);
+            }
         }
-    }
     });
+    console.log("Generated Screenshots for ",count," picture/s stored in ",outputFolder);
+
 }
 
-exports.generateNewScreeshots = generateNewScreeshots;
 function processImage(fName: FName, profileSizeName: string) {
     const fs = require('fs-extra');
     const resizeImg = require('resize-img');
@@ -170,8 +163,8 @@ function processImage(fName: FName, profileSizeName: string) {
 
     resizeImg(fs.readFileSync(newImagesObj[fName].fPath),
         { width: dimensionsOut.width, height: dimensionsOut.height }).then(buf => {
-            let outImgPath = outputFolder + sizeProfiles[profileSizeName].platform 
-            + "/" + profileSizeName;
+            let outImgPath = outputFolder + sizeProfiles[profileSizeName].platform
+                + "/" + profileSizeName;
             fs.ensureDir(outImgPath, err => {
                 if (err) {
                     console.log(err);
@@ -181,3 +174,10 @@ function processImage(fName: FName, profileSizeName: string) {
             })
         });
 }
+
+//Exports Section
+exports.updateConfigInput = updateConfigInput;
+exports.updateConfigOutput = updateConfigOutput;
+exports.showConfigPrintout = showConfigPrintout;
+exports.generateNewScreeshots = generateNewScreeshots;
+

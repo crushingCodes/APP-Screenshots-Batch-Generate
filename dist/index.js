@@ -12,7 +12,6 @@ const conf = new Configstore(pkg.name);
 let outputFolder;
 let inputFolder;
 let newImagesObj = {};
-//Start
 function initConfig() {
     //Set default folder locations
     conf.set(configKeys.inputTargetURL, './screensIn/');
@@ -27,29 +26,27 @@ function loadConfig() {
         outputFolder = conf.get(configKeys.outputTargetURL);
         inputFolder = conf.get(configKeys.inputTargetURL);
     }
-    console.log('Input Folder: ', inputFolder);
-    console.log('Ouput Folder: ', outputFolder);
 }
 function updateConfigByConfigKey(configKey, inputPath) {
     conf.set(configKey, inputPath);
 }
 var updateConfigInput = function (inputPath) {
+    //route the function to the correct configKey
     updateConfigByConfigKey(configKeys.inputTargetURL, inputPath);
 };
-exports.updateConfigInput = updateConfigInput;
 var updateConfigOutput = function (inputPath) {
+    //route the function to the correct configKey
     updateConfigByConfigKey(configKeys.outputTargetURL, inputPath);
 };
-exports.updateConfigOutput = updateConfigOutput;
-var getConfigPrintout = function () {
+var showConfigPrintout = function () {
     outputFolder = conf.get(configKeys.outputTargetURL);
     inputFolder = conf.get(configKeys.inputTargetURL);
+    console.log();
     console.log('Configuration');
     console.log();
     console.log('Input Folder: ', inputFolder);
     console.log('Ouput Folder: ', outputFolder);
 };
-exports.getConfigPrintout = getConfigPrintout;
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
     let tempProfile = sizeProfiles[targetProfileName];
@@ -86,12 +83,14 @@ var generateNewScreeshots = function () {
     const isImage = require('is-image');
     const fs = require('fs');
     let inpImgPath = "";
+    let count = 0;
     console.log("Generate called for: ", inputFolder);
     //For each file found in input folder
     fs.readdirSync(inputFolder).forEach((fName) => {
         inpImgPath = inputFolder + fName;
-        console.log("Processing: ", inpImgPath);
         if (isImage(inpImgPath)) {
+            console.log("Processing: ", inpImgPath);
+            count += 1;
             for (let profileSizeName in sizeProfiles) {
                 newImagesObj[fName] = {
                     dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
@@ -100,8 +99,8 @@ var generateNewScreeshots = function () {
             }
         }
     });
+    console.log("Generated Screenshots for ", count, " picture/s stored in ", outputFolder);
 };
-exports.generateNewScreeshots = generateNewScreeshots;
 function processImage(fName, profileSizeName) {
     const fs = require('fs-extra');
     const resizeImg = require('resize-img');
@@ -118,3 +117,8 @@ function processImage(fName, profileSizeName) {
         });
     });
 }
+//Exports Section
+exports.updateConfigInput = updateConfigInput;
+exports.updateConfigOutput = updateConfigOutput;
+exports.showConfigPrintout = showConfigPrintout;
+exports.generateNewScreeshots = generateNewScreeshots;

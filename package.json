@@ -7,7 +7,8 @@
     "start": "tsc && node dist/index.js",
     "generate": "npm run clean && node dist/index.js",
     "clean": "rm -r screensOut && mkdir screensOut",
-    "build": "tsc && node dist/index.js"
+    "build": "tsc && node dist/index.js",
+    "app-g-install": "tsc && npm pack && npm i -g app-screenshots-batch-generate-1.0.0.tgz"
   },
   "bin": {
     "app-g-build": "bin/app-g-build.js",
