@@ -5,7 +5,7 @@ This is a new project built for the purpose of providing a quick method to gener
 The original version will run primarily as a web app using Javascript.
 
 ### Usage
-#### NPM Package Installation
+#### NPM Installation
 
 `npm i -g app-g-screenshots`
 
@@ -17,5 +17,5 @@ You can run the code in the browser from Codepen below:
 
 [Checkout the Codepen](https://codepen.io/crushingcodes/pen/bZRpKJ#)
 
-#### Web App Instructions
+##### Web App Instructions
 Upload one picture or more pictures and you can output default screenshot sizes for ios and android phone and tablet.
