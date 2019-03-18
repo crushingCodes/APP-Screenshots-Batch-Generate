@@ -13,7 +13,7 @@ let args = minimist(process.argv.slice(2), {
 })
 
 //console.log(args);
-
+if(args.v || args.h || args.in  || args.out || args.c || args.g){
 if (args.v) {
   functionsLibrary.printVersion();
 }
@@ -33,5 +33,7 @@ if (args.c) {
 if (args.g) {
   index.generateNewScreeshots();
 }
-
-
+}else{
+  console.log("No options selected!");
+  functionsLibrary.printHelp();
+}

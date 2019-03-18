@@ -6,9 +6,7 @@ exports.printVersion = printVersion;
 
 var printHelp = function() {
      console.log();
-     console.log("App Screens Generator");
-     console.log();
-     console.log("app-g-screenshots");
+     console.log("App Screens Generator - app-g-screenshots");
      console.log();
      console.log("Options");
      console.log("-v     Version");
