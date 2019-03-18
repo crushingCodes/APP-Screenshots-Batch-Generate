@@ -2,7 +2,7 @@
   "name": "app-g-screenshots",
   "version": "1.0.0",
   "description": "This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms. The original version will run primarily as a web app using Javascript. NPM version is also functional as a global npm package download",
-  "main": "index.js",
+  "main": "bin/index.js",
   "bin": {
     "app-g-screenshots": "./bin/commands.js"
   },

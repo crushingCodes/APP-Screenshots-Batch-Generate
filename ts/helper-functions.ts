@@ -1,12 +1,11 @@
 
 var printVersion = function() {
-    return console.log("1.00");
+    return console.log("1.0.0");
 };
-exports.printVersion = printVersion;
 
 var printHelp = function() {
      console.log();
-     console.log("App Screens Generator - app-g-screenshots");
+     console.log("App Generate Screenshots - app-g-screenshots");
      console.log();
      console.log("Options");
      console.log("-v     Version");
@@ -16,4 +15,6 @@ var printHelp = function() {
      console.log("--out  Set Screenshots out path");
     return console.log();
 };
+
+exports.printVersion = printVersion;
 exports.printHelp = printHelp;
