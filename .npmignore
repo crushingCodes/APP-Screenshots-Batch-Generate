@@ -8,3 +8,5 @@ screensIn/*
 ts/
 *.tgz
 package/
+bin/app-g-build-silent.js
+!screensIn/PlaceImagesHere.txt

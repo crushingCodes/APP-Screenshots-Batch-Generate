@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target":"esnext",
+        "watch": false,
+        "outDir": "dist"
+    },
+    "include": [
+       "ts/*.ts"
+      ],
+      "exclude": [
+        "node_modules"
+      ],
+}
