@@ -12,3 +12,5 @@ screensOut/*
 screensIn/*
 temp/
 *.tgz
+package/*
+!screensIn/PlaceImagesHere.txt

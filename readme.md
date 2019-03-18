@@ -4,7 +4,15 @@
 This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms.
 The original version will run primarily as a web app using Javascript.
 
-### Instructions
+### Usage Instructions
+#### NPM Package Installation
+
+`npm i -g app-g-screenshots`
+
+##### Instructions
+Type `app-g-screenshots -h` for a list of commands.
+
+#### Web App
 You can run the code from Codepen below:
 
 [Checkout the Codepen](https://codepen.io/crushingcodes/pen/bZRpKJ#)
