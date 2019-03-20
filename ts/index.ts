@@ -190,7 +190,7 @@ var generateNewScreeshots = function () {
             }
         }
     });
-    console.log("Generated Screenshots for ",count," picture/s stored in ",outputFolder);
+    console.log("Generated Screenshots for",count,"picture/s stored in",outputFolder);
     })
 }
 }

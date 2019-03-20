@@ -20,14 +20,11 @@
   "dependencies": {
     "@types/node": "^11.11.3",
     "configstore": "^4.0.0",
-    "directory-files": "^1.0.0",
     "fs-extra": "^7.0.1",
-    "fullpath": "^1.2.2",
     "image-size": "^0.7.2",
     "is-image": "^2.0.0",
     "minimist": "^1.2.0",
     "resize-img": "^1.1.2",
-    "resolve-bin": "^0.4.0",
     "shelljs": "^0.8.3",
     "valid-path": "^1.0.0"
   },

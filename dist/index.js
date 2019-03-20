@@ -1,12 +1,11 @@
-//Const imports
 const validPath = require('valid-path');
 const Configstore = require('configstore');
 const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
 const isImage = require('is-image');
-//const fs = require('fs');
 const fs = require('fs-extra');
 const resizeImg = require('resize-img');
+const sizeOf = require('image-size');
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
@@ -20,11 +19,9 @@ let inputFolder;
 let newImagesObj = {};
 function initConfig() {
     //Set default folder locations
-    // conf.set(configKeys.inputTargetURL, './screensIn/');
-    // conf.set(configKeys.outputTargetURL, './screensOut/');
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
-    console.log('Default config set');
+    console.log('Default config initialized');
 }
 function loadConfig() {
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
@@ -65,7 +62,7 @@ function checkPath(pathName, fPath) {
     }
 }
 function folderError(folderName) {
-    console.log("Error:", folderName, " not set! Please type -h to find instructions.");
+    console.error("Error:", folderName, " not set! Please type -h to find instructions.");
 }
 function updateConfigByConfigKey(configKey, inputPath) {
     conf.set(configKey, inputPath);
@@ -108,7 +105,6 @@ function getOutputDimensions(targetProfileName, dimensionsInp) {
 }
 function getInputDimensions(inpImgPath) {
     //Give input dimensions and return dimensions with correct size and orientation
-    let sizeOf = require('image-size');
     let dimensionsIn = sizeOf(inpImgPath);
     let dimensions;
     if (dimensionsIn.width >= dimensionsIn.height) {
@@ -140,7 +136,7 @@ var generateNewScreeshots = function () {
                     }
                 }
             });
-            console.log("Generated Screenshots for ", count, " picture/s stored in ", outputFolder);
+            console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
         });
     }
 };
