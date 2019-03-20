@@ -1,18 +1,20 @@
+//Imports
 import * as _ from "lodash";
-//Const imports
 const validPath = require('valid-path');
-
 const Configstore = require('configstore');
 const pkg = require('../package.json');
 const conf = new Configstore(pkg.name);
 const isImage = require('is-image');
-
-//const fs = require('fs');
 const fs = require('fs-extra');
 const resizeImg = require('resize-img');
-//Config default locations
+const sizeOf = require('image-size');
 
 type Platform = "android" | "ios";
+type Orientation = "portrait" | "landscape";
+type Dimension = number;
+type FName = string;
+type FPath = string;
+type ConfigKey = "inputTargetURL" | "outputTargetURL";
 
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
@@ -20,12 +22,6 @@ const sizeProfiles: SizeProfiles = {
     "5.1": { dimensions: { longLength: 1280, shortLength: 800 }, platform: "android" },
     "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
 };
-
-type Orientation = "portrait" | "landscape";
-type Dimension = number;
-type FName = string;
-type FPath = string;
-type ConfigKey = "inputTargetURL" | "outputTargetURL"
 const configKeys = { inputTargetURL: "inputTargetURL", outputTargetURL: "outputTargetURL" }
 
 interface Dimensions {
@@ -56,7 +52,6 @@ interface ImagesObject {
     [fileName: string]: { dimensions: Dimensions, fPath: FPath };
 }
 
-
 //Global Variables
 let outputFolder: string;
 let inputFolder: string;
@@ -64,11 +59,9 @@ let newImagesObj: ImagesObject = {};
 
 function initConfig() {
     //Set default folder locations
-   // conf.set(configKeys.inputTargetURL, './screensIn/');
-   // conf.set(configKeys.outputTargetURL, './screensOut/');
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
-    console.log('Default config set');
+    console.log('Default config initialized');
 
 }
 function loadConfig() {
@@ -111,7 +104,7 @@ function checkPath(pathName:string,fPath:FPath){
     }
 }
 function folderError(folderName:FName){
-    console.log("Error:",folderName," not set! Please type -h to find instructions.");
+    console.error("Error:",folderName," not set! Please type -h to find instructions.");
 }
 
 function updateConfigByConfigKey(configKey, inputPath: FPath) {
@@ -160,7 +153,6 @@ function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimension
 
 function getInputDimensions(inpImgPath: FPath): Dimensions {
     //Give input dimensions and return dimensions with correct size and orientation
-    let sizeOf = require('image-size');
     let dimensionsIn: ImageSize = sizeOf(inpImgPath);
     let dimensions: Dimensions;
 
