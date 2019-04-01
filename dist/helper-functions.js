@@ -5,11 +5,11 @@ var printHelp = function () {
     console.log();
     console.log("App Generate Screenshots");
     console.log();
-    console.log("Type app-g-screenshots followed by the following options");
-    console.log("-g     Generate Screenshots According to Config");
+    console.log("Type app-g-screenshots followed by the following options:");
+    console.log("-g     Generate Screenshots according to Configuration");
     console.log("-c     View Configuration");
-    console.log("--in   Set screenshots in path");
-    console.log("--out  Set Screenshots out path");
+    console.log("--in   Config screenshots in path");
+    console.log("--out  Config Screenshots out path");
     console.log("-v     Version");
     console.log("-h     Help");
 
