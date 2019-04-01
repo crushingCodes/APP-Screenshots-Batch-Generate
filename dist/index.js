@@ -18,17 +18,15 @@ let outputFolder;
 let inputFolder;
 let newImagesObj = {};
 function initConfig() {
-    //Set default folder locations
-    if(!inputFolder){
+    //Init folder locations
+    if (!inputFolder) {
         conf.set(configKeys.inputTargetURL, '');
-        inputFolder="";
+        inputFolder = "";
     }
-    if(!outputFolder){
+    if (!outputFolder) {
         conf.set(configKeys.outputTargetURL, '');
-        outputFolder="";
+        outputFolder = "";
     }
-    console.log('Default config initialized');
-
 }
 function loadConfig() {
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
