@@ -81,9 +81,19 @@ var showConfigPrintout = function () {
     console.log();
     console.log('Configuration');
     console.log();
-    console.log('Input Folder: ', inputFolder);
-    console.log('Ouput Folder: ', outputFolder);
-    //need a way to reset to default locations
+    if (inputFolder) {
+        console.log('Input Folder: ', inputFolder);
+    } else {
+        console.log('Input Folder: Not configured yet!');
+
+    }
+    if (outputFolder) {
+        console.log('Ouput Folder: ', outputFolder);
+        //need a way to reset to default locations
+    } else {
+        console.log('Ouput Folder: Not configured yet!');
+
+    }
 };
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
