@@ -4,7 +4,7 @@ var printVersion = function () {
 };
 var printHelp = function () {
     console.log();
-    console.log(blue("App Generate Screenshots "));
+    console.log(bold().blue("App Generate Screenshots "));
     console.log();
     console.log("Type ", yellow("app-g-screenshots"), " followed by the options below:");
     console.log("-g     Generate Screenshot Sizes");

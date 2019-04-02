@@ -148,19 +148,19 @@ var showConfigPrintout = function () {
     outputFolder = conf.get(configKeys.outputTargetURL);
     inputFolder = conf.get(configKeys.inputTargetURL);
     console.log();
-    console.log('Configuration');
+    console.log(bold().blue("App Generate Screenshots: "),bold("Configuration"));
     console.log();
     if (!inputFolder || inputFolder == "") {
-        console.log('Input Folder:  Not currently configured!');
+        console.log('Input Folder:  ',red('Not currently configured!'));
     } else {
         console.log('Input Folder: ', inputFolder);
     }
     if (!outputFolder || outputFolder == "") {
-        console.log('Ouput Folder:  Not currently configured!');
+        console.log('Ouput Folder:  ',red('Not currently configured!'));
     } else {
         console.log('Ouput Folder: ', outputFolder);
     }
-
+    console.log();
 }
 
 function getOutputDimensions(targetProfileName: string, dimensionsInp: Dimensions): Dimensions {

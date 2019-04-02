@@ -12,6 +12,10 @@ The original version will run primarily as a web app using Javascript.
 ##### NPM Instructions
 Type `app-g-screenshots -h` for a list of commands. The app is designed to search the configured folder for images and then generate them in the configured output folder.
 
+##### Limitations
+* Can only store one global configuration at a time. If dealing with multiple projects, you should use the --in and --out options every time you use the -g function, which will set configuration on the fly.
+* Only has two profiles for two operating systems and two size profiles, will add to this list on request.
+
 #### Web App
 You can run the code in the browser from Codepen below:
 
