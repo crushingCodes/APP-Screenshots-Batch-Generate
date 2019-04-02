@@ -9,11 +9,13 @@ const fs = require('fs-extra');
 const resizeImg = require('resize-img');
 const sizeOf = require('image-size');
 const unixify = require('unixify');
+const { red, yellow, blue, bold } = require('kleur');
 type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
 type FPath = string;
+
 
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
@@ -97,7 +99,7 @@ function checkPath(pathName: string, fPath: FPath): boolean {
     if (validatedPath) {
         return true;
     } else {
-        console.error(validPath);
+        console.error(validatedPath,red(" was not a valid path;"));
         return false;
     }
 }
@@ -116,14 +118,14 @@ function getFolderPath(fPath: string): string {
     else if (fPath[fPath.length - 1] == '"') {
         //Fix the folder path for WINDOWS file path
         folderPath = fPath.replace('"', "/");
-        console.log("NOTE: The path entered for ", fPath, " did not have trailing /. Auto added '/' to prevent errors!");
+        console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
     } else {
-        console.log("Error: The path entered for ", fPath, " was not a directory.");
+        console.error(red("Error: The path entered for "), fPath, red(" was not a directory."));
     }
     return folderPath;
 }
 function folderError(folderName: FName) {
-    console.error("Error:", folderName, " not configured! Please type -h to find instructions.");
+    console.error(red("Error:"), folderName, red(" not configured! Please type -h to find instructions."));
 }
 
 function updateConfigByConfigKey(configKey, inputPath: FPath) {

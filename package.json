@@ -23,6 +23,7 @@
     "fs-extra": "^7.0.1",
     "image-size": "^0.7.2",
     "is-image": "^2.0.0",
+    "kleur": "^3.0.2",
     "minimist": "^1.2.0",
     "prompts": "^2.0.4",
     "resize-img": "^1.1.2",
