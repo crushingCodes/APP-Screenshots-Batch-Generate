@@ -14,11 +14,11 @@ Type `app-g-screenshots -h` for a list of commands. The app is designed to searc
 
 ##### * Recomended file input image ratios for this generator is as follows:
 ###### For iOS Screenshots
-5.5inch  = 16 : 9 ratio
-10.5inch = 4 : 3 ratio
+* 5.5inch  - 16 : 9 ratio
+* 10.5inch - 4 : 3 ratio
 ###### For Android Screenshots
-5.1inch  = 16 : 9 ratio
-10inch   = 16 : 9 ratio
+* 5.1inch  - 16 : 9 ratio
+* 10inch   - 16 : 9 ratio
 
 ##### Limitations
 * Requires node@7.6 or above.
