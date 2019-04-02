@@ -10,8 +10,8 @@ var printHelp = function() {
      console.log("Type app-g-screenshots followed by the options below:");
      console.log("-g     Generate Screenshot Sizes");
      console.log("-c     View Configuration");
-     console.log("--in   Configure screenshots in path");
-     console.log("--out  Configure Screenshots out path");
+     console.log("--in   Configure screenshots input path");
+     console.log("--out  Configure Screenshots output path");
      console.log("-v     Version");
      console.log("-h     Help");
 
