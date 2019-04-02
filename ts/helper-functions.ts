@@ -1,3 +1,4 @@
+const { red, yellow, blue, bold } = require('kleur');
 
 var printVersion = function() {
     return console.log("1.0.0");
@@ -5,14 +6,16 @@ var printVersion = function() {
 
 var printHelp = function() {
      console.log();
-     console.log("App Generate Screenshots - app-g-screenshots");
+     console.log(bold().blue("App Generate Screenshots "));
      console.log();
-     console.log("Options");
+     console.log("Type ",yellow("app-g-screenshots")," followed by the options below:");
+     console.log("-g     Generate Screenshot Sizes");
+     console.log("-c     View Configuration");
+     console.log("--in   Configure screenshots input path");
+     console.log("--out  Configure Screenshots output path");
      console.log("-v     Version");
      console.log("-h     Help");
-     console.log("-c     View Configuration");
-     console.log("--in   Set screenshots in path");
-     console.log("--out  Set Screenshots out path");
+
     return console.log();
 };
 

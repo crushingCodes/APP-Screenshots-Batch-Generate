@@ -6,6 +6,8 @@ const isImage = require('is-image');
 const fs = require('fs-extra');
 const resizeImg = require('resize-img');
 const sizeOf = require('image-size');
+const unixify = require('unixify');
+const { red, yellow, bold } = require('kleur');
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
@@ -18,12 +20,18 @@ let outputFolder;
 let inputFolder;
 let newImagesObj = {};
 function initConfig() {
-    //Set default folder locations
+    //Init folder locations
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
-    console.log('Default config initialized');
+    if (!inputFolder) {
+        inputFolder = "";
+    }
+    if (!outputFolder) {
+        outputFolder = "";
+    }
 }
 function loadConfig() {
+    //Check for saved configuration
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
         initConfig();
     }
@@ -41,6 +49,7 @@ function loadConfig() {
     }
 }
 function checkPath(pathName, fPath) {
+    //Check for a valid path
     let validatedPath;
     if (fPath == "") {
         folderError(pathName);
@@ -48,24 +57,42 @@ function checkPath(pathName, fPath) {
     }
     validatedPath = validPath(fPath);
     if (validatedPath) {
-        if (fPath[fPath.length - 1] == '/') {
-            return true;
-        }
-        else {
-            console.error("The path entered for ", pathName, " was not a directory.");
-            return false;
-        }
+        return true;
     }
     else {
-        console.error(validPath);
+        console.error(bold().red("Error:"), validatedPath, " was not a valid path;");
         return false;
     }
 }
+function getNormalizedPath(fPath) {
+    //change path to unix friendly
+    let normalPath = unixify(fPath, false);
+    return normalPath;
+}
+function getFolderPath(fPath) {
+    //Get a valid folder path or return empty string
+    let folderPath = "";
+    if (fPath[fPath.length - 1] == '/') {
+        folderPath = fPath;
+    }
+    else if (fPath[fPath.length - 1] == '"') {
+        //Fix the folder path for WINDOWS file path
+        folderPath = fPath.replace('"', "/");
+        console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
+    }
+    else {
+        console.error(bold().red("Error:"), " The path entered for "), fPath, (" was not a directory.");
+    }
+    return folderPath;
+}
 function folderError(folderName) {
-    console.error("Error:", folderName, " not set! Please type -h to find instructions.");
+    console.error(bold().red("Error:"), folderName, " not configured! Please type -h to find instructions.");
 }
 function updateConfigByConfigKey(configKey, inputPath) {
-    conf.set(configKey, inputPath);
+    if (checkPath(configKey, inputPath)) {
+        //Add normalizer to clean path string on entry
+        conf.set(configKey, getFolderPath(getNormalizedPath(inputPath)));
+    }
 }
 var updateConfigInput = function (inputPath) {
     //route the function to the correct configKey
@@ -79,11 +106,20 @@ var showConfigPrintout = function () {
     outputFolder = conf.get(configKeys.outputTargetURL);
     inputFolder = conf.get(configKeys.inputTargetURL);
     console.log();
-    console.log('Configuration');
+    console.log(bold().blue("App Generate Screenshots: "), bold("Configuration"));
     console.log();
-    console.log('Input Folder: ', inputFolder);
-    console.log('Ouput Folder: ', outputFolder);
-    //need a way to reset to default locations
+    if (!inputFolder || inputFolder == "") {
+        console.log('Input Folder:  ', red('Not currently configured!'));
+    }
+    else {
+        console.log('Input Folder: ', inputFolder);
+    }
+    if (!outputFolder || outputFolder == "") {
+        console.log('Ouput Folder:  ', red('Not currently configured!'));
+    }
+    else {
+        console.log('Ouput Folder: ', outputFolder);
+    }
 };
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;
@@ -115,29 +151,48 @@ function getInputDimensions(inpImgPath) {
     }
     return dimensions;
 }
-var generateNewScreeshots = function () {
+async function getUserAnswer(question) {
+    const prompts = require('prompts');
+    const response = await prompts({
+        type: 'confirm',
+        name: 'value',
+        message: question,
+        initial: true
+    });
+    // const response = await prompts({
+    //     type: 'text',
+    //     name: 'value',
+    //     message: question,
+    //     validate: value => value != "y" || value != "n" ? `Please enter y or n` : true
+    // });
+    return response.value;
+}
+var generateNewScreeshots = async function () {
+    //Check for loaded config and user confirmation
     if (loadConfig()) {
-        let inpImgPath = "";
-        let count = 0;
-        console.log("Generate called for: ", inputFolder);
-        //If no input folder found create it
-        fs.ensureDir(inputFolder, err => {
-            //For each file found in input folder
-            fs.readdirSync(inputFolder).forEach((fName) => {
-                inpImgPath = inputFolder + fName;
-                if (isImage(inpImgPath)) {
-                    console.log("Processing: ", inpImgPath);
-                    count += 1;
-                    for (let profileSizeName in sizeProfiles) {
-                        newImagesObj[fName] = {
-                            dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-                        };
-                        processImage(fName, profileSizeName);
+        if (await getUserAnswer("Do you want to continue and override files in " + outputFolder)) {
+            let inpImgPath = "";
+            let count = 0;
+            console.log("Generate called for: ", inputFolder);
+            //If no input folder found create it
+            fs.ensureDir(inputFolder, err => {
+                //For each file found in input folder
+                fs.readdirSync(inputFolder).forEach((fName) => {
+                    inpImgPath = inputFolder + fName;
+                    if (isImage(inpImgPath)) {
+                        console.log("Processing: ", inpImgPath);
+                        count += 1;
+                        for (let profileSizeName in sizeProfiles) {
+                            newImagesObj[fName] = {
+                                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                            };
+                            processImage(fName, profileSizeName);
+                        }
                     }
-                }
+                });
+                console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
             });
-            console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
-        });
+        }
     }
 };
 function processImage(fName, profileSizeName) {

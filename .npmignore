@@ -1,9 +1,10 @@
 web-app/
 temp/*
 temp/
-screensOut/
-screensIn/
-!.gitignore
+screensOut
+screensIn
+screensOut/*
+screensIn/*
 *.tmp
 ts/
 *.tgz
