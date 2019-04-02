@@ -120,6 +120,7 @@ var showConfigPrintout = function () {
     else {
         console.log('Ouput Folder: ', outputFolder);
     }
+    console.log();
 };
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;

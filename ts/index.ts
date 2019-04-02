@@ -205,12 +205,6 @@ async function getUserAnswer(question: string) {
         initial: true
     })
 
-    // const response = await prompts({
-    //     type: 'text',
-    //     name: 'value',
-    //     message: question,
-    //     validate: value => value != "y" || value != "n" ? `Please enter y or n` : true
-    // });
     return response.value;
 
 }
