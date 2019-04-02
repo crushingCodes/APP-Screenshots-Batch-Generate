@@ -81,7 +81,7 @@ function getFolderPath(fPath) {
         console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
     }
     else {
-        console.error(bold().red("Error:"), " The path entered for "), fPath, (" was not a directory.");
+        console.error(bold().red("Error:"), " The path entered for ", fPath, " was not a directory.");
     }
     return folderPath;
 }
