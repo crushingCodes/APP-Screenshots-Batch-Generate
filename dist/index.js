@@ -10,9 +10,9 @@ const unixify = require('unixify');
 const { red, yellow, bold } = require('kleur');
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
-    "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
-    "5.1": { dimensions: { longLength: 1280, shortLength: 800 }, platform: "android" },
-    "10": { dimensions: { longLength: 2560, shortLength: 1700 }, platform: "android" },
+    "12.9": { dimensions: { longLength: 2732, shortLength: 2048 }, platform: "ios" },
+    "5.1": { dimensions: { longLength: 1280, shortLength: 720 }, platform: "android" },
+    "10": { dimensions: { longLength: 2560, shortLength: 1440 }, platform: "android" },
 };
 const configKeys = { inputTargetURL: "inputTargetURL", outputTargetURL: "outputTargetURL" };
 //Global Variables
@@ -160,12 +160,6 @@ async function getUserAnswer(question) {
         message: question,
         initial: true
     });
-    // const response = await prompts({
-    //     type: 'text',
-    //     name: 'value',
-    //     message: question,
-    //     validate: value => value != "y" || value != "n" ? `Please enter y or n` : true
-    // });
     return response.value;
 }
 var generateNewScreeshots = async function () {

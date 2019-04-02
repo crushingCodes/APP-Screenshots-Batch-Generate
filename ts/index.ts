@@ -19,7 +19,7 @@ type FPath = string;
 
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
-    "10.5": { dimensions: { longLength: 2224, shortLength: 1668 }, platform: "ios" },
+    "12.9": { dimensions: { longLength: 2732, shortLength: 2048 }, platform: "ios" },
     "5.1": { dimensions: { longLength: 1280, shortLength: 720 }, platform: "android" },
     "10": { dimensions: { longLength: 2560, shortLength: 1440 }, platform: "android" },
 };
