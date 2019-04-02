@@ -34,7 +34,7 @@ You can run the code in the browser from Codepen below:
 Upload one picture or more pictures and you can output default screenshot sizes for ios and android phone and tablet.
 
 ### Trademarks
-All the following trademarks are the properties of their respective owners as listed below. Should any trademark attribution be missing, mistaken or erroneous, please contact me at absorblanguages@gmail.com as soon as possible to rectify.
+All the following trademarks are the properties of their respective owners as listed below. Should any trademark attribution be missing, mistaken or incorrect, please contact me at absorblanguages@gmail.com as soon as possible to fix it.
 
 * Android is a trademark of Google LLC.
 * IOS is a trademark or registered trademark of Cisco in the U.S. and other countries and is used under license.
