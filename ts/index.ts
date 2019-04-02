@@ -8,7 +8,7 @@ const isImage = require('is-image');
 const fs = require('fs-extra');
 const resizeImg = require('resize-img');
 const sizeOf = require('image-size');
-
+const unixify = require('unixify');
 type Platform = "android" | "ios";
 type Orientation = "portrait" | "landscape";
 type Dimension = number;
@@ -58,7 +58,7 @@ let inputFolder: string;
 let newImagesObj: ImagesObject = {};
 
 function initConfig() {
-    //Set default folder locations
+    //Init folder locations
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
     if(!inputFolder){
@@ -88,37 +88,56 @@ function loadConfig() {
 }
 
 function checkPath(pathName:string,fPath:FPath){
-    const upath= require('upath');
     let validatedPath;
     if (fPath == "") {
         folderError(pathName);
         return false;
     }
-   // validatedPath = validPath(fPath);
-   // if (validatedPath) {
-
-        let normalPath=upath.normalize(fPath);
-        console.log(normalPath);
-        //Try add support for windows folders
-        if (normalPath[normalPath.length - 1] == '/') {
+    validatedPath = validPath(fPath);
+    if (validatedPath) {
+        // if(getFolderPath(getNormalizedPath(validatedPath))){
             return true;
-        }
-        else {
-            console.error("The path entered for ", pathName, " was not a directory.");
-            return false;
-         }
-    // } else {
-    //     console.error(validPath);
-    //     return false;
+        // }else{
+        //     return false;
+        // }
+    } else {
+        console.error(validPath);
+        return false;
+    }
+}
+
+function getNormalizedPath(fPath:string):string{
+    //let normalPath = upath.normalizeSafe(fPath);
+    let normalPath = unixify(fPath ,false);
+    // if (normalPath[normalPath.length - 1] != '/') {
+    //     console.error("Error: The path entered for ", fPath, " was not a directory.");
     // }
+    return normalPath;
+}
+function getFolderPath(fPath:string):string{
+    let folderPath="";
+    if (fPath[fPath.length - 1] == '/') {
+        folderPath=fPath;
+        
+    }
+    else if (fPath[fPath.length - 1] == '"') {
+        //Fix the folder path for WINDOWS file path
+        folderPath= fPath.replace('"',"/");
+        console.log("NOTE: The path entered for ", fPath, " did not have trailing /. Auto added '/' to prevent errors!");
+    }else{
+        console.log("Error: The path entered for ", fPath, " was not a directory.");
+    }
+
+    return folderPath;
 }
 function folderError(folderName:FName){
-    console.error("Error:",folderName," not set! Please type -h to find instructions.");
+    console.error("Error:",folderName," not configured! Please type -h to find instructions.");
 }
 
 function updateConfigByConfigKey(configKey, inputPath: FPath) {
     if(checkPath(configKey,inputPath)){
-    conf.set(configKey, inputPath);
+    //Add normalizer to clean path string on entry
+    conf.set(configKey, getFolderPath(getNormalizedPath(inputPath)));
     }
 }
 var updateConfigInput = function (inputPath: FPath) {
@@ -137,9 +156,16 @@ var showConfigPrintout = function () {
     console.log();
     console.log('Configuration');
     console.log();
-    console.log('Input Folder: ', inputFolder);
-    console.log('Ouput Folder: ', outputFolder);
-//need a way to reset to default locations
+    if(!inputFolder || inputFolder==""){
+        console.log('Input Folder:  Not currently configured!');
+    }else{
+        console.log('Input Folder: ', inputFolder);
+    }
+    if(!outputFolder || outputFolder==""){
+        console.log('Ouput Folder:  Not currently configured!');
+    }else{
+        console.log('Ouput Folder: ', outputFolder);
+    }
 
 }
 
