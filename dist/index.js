@@ -18,21 +18,19 @@ let outputFolder;
 let inputFolder;
 let newImagesObj = {};
 function initConfig() {
-    //Init folder locations
+    //Set default folder locations
+    conf.set(configKeys.inputTargetURL, '');
+    conf.set(configKeys.outputTargetURL, '');
     if (!inputFolder) {
-        conf.set(configKeys.inputTargetURL, '');
         inputFolder = "";
     }
     if (!outputFolder) {
-        conf.set(configKeys.outputTargetURL, '');
         outputFolder = "";
     }
+    //  console.log('Default config initialized');
 }
 function loadConfig() {
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
-        initConfig();
-    }
-    else if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
         initConfig();
     }
     else {
@@ -49,31 +47,36 @@ function loadConfig() {
     }
 }
 function checkPath(pathName, fPath) {
+    const upath = require('upath');
     let validatedPath;
     if (fPath == "") {
         folderError(pathName);
         return false;
     }
-    validatedPath = validPath(fPath);
-    if (validatedPath) {
-        if (fPath[fPath.length - 1] == '/') {
-            return true;
-        }
-        else {
-            console.error("The path entered for ", pathName, " was not a directory.");
-            return false;
-        }
+    // validatedPath = validPath(fPath);
+    // if (validatedPath) {
+    let normalPath = upath.normalize(fPath);
+    console.log(normalPath);
+    //Try add support for windows folders
+    if (normalPath[normalPath.length - 1] == '/') {
+        return true;
     }
     else {
-        console.error(validPath);
+        console.error("The path entered for ", pathName, " was not a directory.");
         return false;
     }
+    // } else {
+    //     console.error(validPath);
+    //     return false;
+    // }
 }
 function folderError(folderName) {
     console.error("Error:", folderName, " not set! Please type -h to find instructions.");
 }
 function updateConfigByConfigKey(configKey, inputPath) {
-    conf.set(configKey, inputPath);
+    if (checkPath(configKey, inputPath)) {
+        conf.set(configKey, inputPath);
+    }
 }
 var updateConfigInput = function (inputPath) {
     //route the function to the correct configKey
@@ -89,19 +92,9 @@ var showConfigPrintout = function () {
     console.log();
     console.log('Configuration');
     console.log();
-    if (inputFolder) {
-        console.log('Input Folder: ', inputFolder);
-    } else {
-        console.log('Input Folder: Not configured yet!');
-
-    }
-    if (outputFolder) {
-        console.log('Ouput Folder: ', outputFolder);
-        //need a way to reset to default locations
-    } else {
-        console.log('Ouput Folder: Not configured yet!');
-
-    }
+    console.log('Input Folder: ', inputFolder);
+    console.log('Ouput Folder: ', outputFolder);
+    //need a way to reset to default locations
 };
 function getOutputDimensions(targetProfileName, dimensionsInp) {
     let dimensionsOut;

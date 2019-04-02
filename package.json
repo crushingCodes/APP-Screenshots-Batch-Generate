@@ -26,6 +26,7 @@
     "minimist": "^1.2.0",
     "resize-img": "^1.1.2",
     "shelljs": "^0.8.3",
+    "upath": "^1.1.2",
     "valid-path": "^1.0.0"
   },
   "devDependencies": {

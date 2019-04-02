@@ -61,7 +61,12 @@ function initConfig() {
     //Set default folder locations
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
-    console.log('Default config initialized');
+    if(!inputFolder){
+        inputFolder="";
+    }
+    if(!outputFolder){
+        outputFolder="";
+    }
 
 }
 function loadConfig() {
@@ -83,32 +88,38 @@ function loadConfig() {
 }
 
 function checkPath(pathName:string,fPath:FPath){
-    let validatedPath:FPath;
-
-    if(fPath==""){
+    const upath= require('upath');
+    let validatedPath;
+    if (fPath == "") {
         folderError(pathName);
         return false;
-    } 
-    validatedPath = validPath(fPath);
-    if (validatedPath) {
-        if(fPath[fPath.length-1]=='/'){
+    }
+   // validatedPath = validPath(fPath);
+   // if (validatedPath) {
+
+        let normalPath=upath.normalize(fPath);
+        console.log(normalPath);
+        //Try add support for windows folders
+        if (normalPath[normalPath.length - 1] == '/') {
             return true;
         }
-        else{
-            console.error("The path entered for ",pathName, " was not a directory.");
+        else {
+            console.error("The path entered for ", pathName, " was not a directory.");
             return false;
-        }
-    } else {
-        console.error(validPath);
-        return false;
-    }
+         }
+    // } else {
+    //     console.error(validPath);
+    //     return false;
+    // }
 }
 function folderError(folderName:FName){
     console.error("Error:",folderName," not set! Please type -h to find instructions.");
 }
 
 function updateConfigByConfigKey(configKey, inputPath: FPath) {
+    if(checkPath(configKey,inputPath)){
     conf.set(configKey, inputPath);
+    }
 }
 var updateConfigInput = function (inputPath: FPath) {
         //route the function to the correct configKey
