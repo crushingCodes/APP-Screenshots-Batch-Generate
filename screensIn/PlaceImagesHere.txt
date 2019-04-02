@@ -1,3 +1,0 @@
-Place your original screenshots in this folder to be converted. 
-You can configure it to be any folder, 
-type app-g-screenshots -h  in the console for more information.

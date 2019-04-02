@@ -24,6 +24,7 @@
     "image-size": "^0.7.2",
     "is-image": "^2.0.0",
     "minimist": "^1.2.0",
+    "prompts": "^2.0.4",
     "resize-img": "^1.1.2",
     "shelljs": "^0.8.3",
     "unixify": "^1.0.0",

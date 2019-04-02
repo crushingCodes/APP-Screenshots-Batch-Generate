@@ -19,7 +19,7 @@ let outputFolder;
 let inputFolder;
 let newImagesObj = {};
 function initConfig() {
-    //Set default folder locations
+    //Init folder locations
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
     if (!inputFolder) {
@@ -30,6 +30,7 @@ function initConfig() {
     }
 }
 function loadConfig() {
+    //Check for saved configuration
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
         initConfig();
     }
@@ -47,6 +48,7 @@ function loadConfig() {
     }
 }
 function checkPath(pathName, fPath) {
+    //Check for a valid path
     let validatedPath;
     if (fPath == "") {
         folderError(pathName);
@@ -54,11 +56,7 @@ function checkPath(pathName, fPath) {
     }
     validatedPath = validPath(fPath);
     if (validatedPath) {
-        // if(getFolderPath(getNormalizedPath(validatedPath))){
         return true;
-        // }else{
-        //     return false;
-        // }
     }
     else {
         console.error(validPath);
@@ -66,14 +64,12 @@ function checkPath(pathName, fPath) {
     }
 }
 function getNormalizedPath(fPath) {
-    //let normalPath = upath.normalizeSafe(fPath);
+    //change path to unix friendly
     let normalPath = unixify(fPath, false);
-    // if (normalPath[normalPath.length - 1] != '/') {
-    //     console.error("Error: The path entered for ", fPath, " was not a directory.");
-    // }
     return normalPath;
 }
 function getFolderPath(fPath) {
+    //Get a valid folder path or return empty string
     let folderPath = "";
     if (fPath[fPath.length - 1] == '/') {
         folderPath = fPath;
@@ -154,29 +150,48 @@ function getInputDimensions(inpImgPath) {
     }
     return dimensions;
 }
-var generateNewScreeshots = function () {
+async function getUserAnswer(question) {
+    const prompts = require('prompts');
+    const response = await prompts({
+        type: 'confirm',
+        name: 'value',
+        message: question,
+        initial: true
+    });
+    // const response = await prompts({
+    //     type: 'text',
+    //     name: 'value',
+    //     message: question,
+    //     validate: value => value != "y" || value != "n" ? `Please enter y or n` : true
+    // });
+    return response.value;
+}
+var generateNewScreeshots = async function () {
+    //Check for loaded config and user confirmation
     if (loadConfig()) {
-        let inpImgPath = "";
-        let count = 0;
-        console.log("Generate called for: ", inputFolder);
-        //If no input folder found create it
-        fs.ensureDir(inputFolder, err => {
-            //For each file found in input folder
-            fs.readdirSync(inputFolder).forEach((fName) => {
-                inpImgPath = inputFolder + fName;
-                if (isImage(inpImgPath)) {
-                    console.log("Processing: ", inpImgPath);
-                    count += 1;
-                    for (let profileSizeName in sizeProfiles) {
-                        newImagesObj[fName] = {
-                            dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-                        };
-                        processImage(fName, profileSizeName);
+        if (await getUserAnswer("Do you want to continue and override files in " + outputFolder)) {
+            let inpImgPath = "";
+            let count = 0;
+            console.log("Generate called for: ", inputFolder);
+            //If no input folder found create it
+            fs.ensureDir(inputFolder, err => {
+                //For each file found in input folder
+                fs.readdirSync(inputFolder).forEach((fName) => {
+                    inpImgPath = inputFolder + fName;
+                    if (isImage(inpImgPath)) {
+                        console.log("Processing: ", inpImgPath);
+                        count += 1;
+                        for (let profileSizeName in sizeProfiles) {
+                            newImagesObj[fName] = {
+                                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                            };
+                            processImage(fName, profileSizeName);
+                        }
                     }
-                }
+                });
+                console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
             });
-            console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
-        });
+        }
     }
 };
 function processImage(fName, profileSizeName) {

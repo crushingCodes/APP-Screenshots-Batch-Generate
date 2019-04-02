@@ -193,34 +193,56 @@ function getInputDimensions(inpImgPath: FPath): Dimensions {
     return dimensions;
 }
 
-var generateNewScreeshots = function () {
+async function getUserAnswer(question: string) {
+    const prompts = require('prompts');
 
+    const response = await prompts({
+        type: 'confirm',
+        name: 'value',
+        message: question,
+        initial: true
+    })
+
+    // const response = await prompts({
+    //     type: 'text',
+    //     name: 'value',
+    //     message: question,
+    //     validate: value => value != "y" || value != "n" ? `Please enter y or n` : true
+    // });
+    return response.value;
+
+}
+
+var generateNewScreeshots = async function () {
+    //Check for loaded config and user confirmation
     if (loadConfig()) {
+        if (await getUserAnswer("Do you want to continue and override files in " + outputFolder)) {
 
-        let inpImgPath: FName = "";
-        let count = 0;
-        console.log("Generate called for: ", inputFolder);
+            let inpImgPath: FName = "";
+            let count = 0;
+            console.log("Generate called for: ", inputFolder);
 
-        //If no input folder found create it
-        fs.ensureDir(inputFolder, err => {
+            //If no input folder found create it
+            fs.ensureDir(inputFolder, err => {
 
-            //For each file found in input folder
-            fs.readdirSync(inputFolder).forEach((fName: FName) => {
-                inpImgPath = inputFolder + fName;
-                if (isImage(inpImgPath)) {
-                    console.log("Processing: ", inpImgPath);
-                    count += 1;
-                    for (let profileSizeName in sizeProfiles) {
+                //For each file found in input folder
+                fs.readdirSync(inputFolder).forEach((fName: FName) => {
+                    inpImgPath = inputFolder + fName;
+                    if (isImage(inpImgPath)) {
+                        console.log("Processing: ", inpImgPath);
+                        count += 1;
+                        for (let profileSizeName in sizeProfiles) {
 
-                        newImagesObj[fName] = {
-                            dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-                        };
-                        processImage(fName, profileSizeName);
+                            newImagesObj[fName] = {
+                                dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                            };
+                            processImage(fName, profileSizeName);
+                        }
                     }
-                }
-            });
-            console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
-        })
+                });
+                console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
+            })
+        }
     }
 }
 
