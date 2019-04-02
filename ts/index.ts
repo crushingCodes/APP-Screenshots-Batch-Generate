@@ -14,7 +14,6 @@ type Orientation = "portrait" | "landscape";
 type Dimension = number;
 type FName = string;
 type FPath = string;
-type ConfigKey = "inputTargetURL" | "outputTargetURL";
 
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
@@ -61,33 +60,34 @@ function initConfig() {
     //Init folder locations
     conf.set(configKeys.inputTargetURL, '');
     conf.set(configKeys.outputTargetURL, '');
-    if(!inputFolder){
-        inputFolder="";
+    if (!inputFolder) {
+        inputFolder = "";
     }
-    if(!outputFolder){
-        outputFolder="";
+    if (!outputFolder) {
+        outputFolder = "";
     }
 
 }
-function loadConfig() {
-
+function loadConfig(): boolean {
+    //Check for saved configuration
     if (conf.get(configKeys.inputTargetURL) == null || conf.get(configKeys.outputTargetURL) == null) {
         initConfig();
     } else {
         outputFolder = conf.get(configKeys.outputTargetURL);
         inputFolder = conf.get(configKeys.inputTargetURL);
     }
-    //Check for no path
 
-    if(checkPath("input path",inputFolder) && 
-    checkPath("output path",outputFolder)){
+    //Check for no path
+    if (checkPath("input path", inputFolder) &&
+        checkPath("output path", outputFolder)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
-function checkPath(pathName:string,fPath:FPath){
+function checkPath(pathName: string, fPath: FPath): boolean {
+    //Check for a valid path
     let validatedPath;
     if (fPath == "") {
         folderError(pathName);
@@ -95,58 +95,50 @@ function checkPath(pathName:string,fPath:FPath){
     }
     validatedPath = validPath(fPath);
     if (validatedPath) {
-        // if(getFolderPath(getNormalizedPath(validatedPath))){
-            return true;
-        // }else{
-        //     return false;
-        // }
+        return true;
     } else {
         console.error(validPath);
         return false;
     }
 }
 
-function getNormalizedPath(fPath:string):string{
-    //let normalPath = upath.normalizeSafe(fPath);
-    let normalPath = unixify(fPath ,false);
-    // if (normalPath[normalPath.length - 1] != '/') {
-    //     console.error("Error: The path entered for ", fPath, " was not a directory.");
-    // }
+function getNormalizedPath(fPath: string): string {
+    //change path to unix friendly
+    let normalPath = unixify(fPath, false);
     return normalPath;
 }
-function getFolderPath(fPath:string):string{
-    let folderPath="";
+function getFolderPath(fPath: string): string {
+    //Get a valid folder path or return empty string
+    let folderPath = "";
     if (fPath[fPath.length - 1] == '/') {
-        folderPath=fPath;
-        
+        folderPath = fPath;
     }
     else if (fPath[fPath.length - 1] == '"') {
         //Fix the folder path for WINDOWS file path
-        folderPath= fPath.replace('"',"/");
+        folderPath = fPath.replace('"', "/");
         console.log("NOTE: The path entered for ", fPath, " did not have trailing /. Auto added '/' to prevent errors!");
-    }else{
+    } else {
         console.log("Error: The path entered for ", fPath, " was not a directory.");
     }
-
     return folderPath;
 }
-function folderError(folderName:FName){
-    console.error("Error:",folderName," not configured! Please type -h to find instructions.");
+function folderError(folderName: FName) {
+    console.error("Error:", folderName, " not configured! Please type -h to find instructions.");
 }
 
 function updateConfigByConfigKey(configKey, inputPath: FPath) {
-    if(checkPath(configKey,inputPath)){
-    //Add normalizer to clean path string on entry
-    conf.set(configKey, getFolderPath(getNormalizedPath(inputPath)));
+    if (checkPath(configKey, inputPath)) {
+        //Add normalizer to clean path string on entry
+        conf.set(configKey, getFolderPath(getNormalizedPath(inputPath)));
     }
 }
 var updateConfigInput = function (inputPath: FPath) {
-        //route the function to the correct configKey
+    //route the function to the correct configKey
     updateConfigByConfigKey(configKeys.inputTargetURL, inputPath)
 }
 
 var updateConfigOutput = function (inputPath: FPath) {
-        //route the function to the correct configKey
+    //route the function to the correct configKey
     updateConfigByConfigKey(configKeys.outputTargetURL, inputPath)
 }
 
@@ -156,14 +148,14 @@ var showConfigPrintout = function () {
     console.log();
     console.log('Configuration');
     console.log();
-    if(!inputFolder || inputFolder==""){
+    if (!inputFolder || inputFolder == "") {
         console.log('Input Folder:  Not currently configured!');
-    }else{
+    } else {
         console.log('Input Folder: ', inputFolder);
     }
-    if(!outputFolder || outputFolder==""){
+    if (!outputFolder || outputFolder == "") {
         console.log('Ouput Folder:  Not currently configured!');
-    }else{
+    } else {
         console.log('Ouput Folder: ', outputFolder);
     }
 
@@ -203,33 +195,33 @@ function getInputDimensions(inpImgPath: FPath): Dimensions {
 
 var generateNewScreeshots = function () {
 
-    if(loadConfig()){
+    if (loadConfig()) {
 
-    let inpImgPath: FName = "";
-    let count=0;
-    console.log("Generate called for: ", inputFolder);
+        let inpImgPath: FName = "";
+        let count = 0;
+        console.log("Generate called for: ", inputFolder);
 
-    //If no input folder found create it
-    fs.ensureDir(inputFolder, err => {
+        //If no input folder found create it
+        fs.ensureDir(inputFolder, err => {
 
-    //For each file found in input folder
-    fs.readdirSync(inputFolder).forEach((fName: FName) => {
-        inpImgPath = inputFolder + fName;
-        if (isImage(inpImgPath)) {
-            console.log("Processing: ", inpImgPath);
-            count+=1;
-            for (let profileSizeName in sizeProfiles) {
+            //For each file found in input folder
+            fs.readdirSync(inputFolder).forEach((fName: FName) => {
+                inpImgPath = inputFolder + fName;
+                if (isImage(inpImgPath)) {
+                    console.log("Processing: ", inpImgPath);
+                    count += 1;
+                    for (let profileSizeName in sizeProfiles) {
 
-                newImagesObj[fName] = {
-                    dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
-                };
-                processImage(fName, profileSizeName);
-            }
-        }
-    });
-    console.log("Generated Screenshots for",count,"picture/s stored in",outputFolder);
-    })
-}
+                        newImagesObj[fName] = {
+                            dimensions: getInputDimensions(inpImgPath), fPath: inpImgPath
+                        };
+                        processImage(fName, profileSizeName);
+                    }
+                }
+            });
+            console.log("Generated Screenshots for", count, "picture/s stored in", outputFolder);
+        })
+    }
 }
 
 function processImage(fName: FName, profileSizeName: string) {
@@ -255,4 +247,3 @@ exports.updateConfigInput = updateConfigInput;
 exports.updateConfigOutput = updateConfigOutput;
 exports.showConfigPrintout = showConfigPrintout;
 exports.generateNewScreeshots = generateNewScreeshots;
-
