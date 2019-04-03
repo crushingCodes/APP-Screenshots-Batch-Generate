@@ -18,6 +18,7 @@ const resizeImg = require('resize-img');
 const sizeOf = require('image-size');
 const unixify = require('unixify');
 const { red, yellow, bold } = require('kleur');
+//Const Variables
 const android = 'android';
 const ios = 'ios';
 const sizeProfiles = {

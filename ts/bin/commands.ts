@@ -1,43 +1,65 @@
 #!/usr/bin/env node
-let minimist = require('minimist')
-let functionsLibrary = require('../dist/helper-functions.js');
-
 import { ScreenshotGenerator } from "../dist/index";
+let minimist = require('minimist')
+const { yellow, blue, bold } = require('kleur');
+
 let index = new ScreenshotGenerator();
 
-let args = minimist(process.argv.slice(2), {
+const minimistOptions = {
   string: ['in', 'out'],
   boolean: ['version', 'generate', 'config', 'android', 'ios'],
   alias: { h: 'help', g: 'generate', v: 'version', c: 'config', a: 'android', i: 'ios' },
-})
+};
+let args = minimist(process.argv.slice(2), minimistOptions)
 
-if (args.v || args.h || args.in || args.out || args.c || args.g || args.android || args.ios) {
-  if (args.v) {
-    functionsLibrary.printVersion();
-  }
-  if (args.h) {
-    functionsLibrary.printHelp();
-  }
-  if (args.in) {
+var printHelp = function () {
+  console.log(bold().blue("App Generate Screenshots "));
+  console.log();
+  console.log("Type ", yellow("app-g-screenshots"), " followed by the options below:");
+  console.log("-a     Generate Android Screenshot Sizes");
+  console.log("-i     Generate iOS Screenshot Sizes");
+  console.log("-c     View Configuration");
+  console.log("--in   Configure screenshots input path");
+  console.log("--out  Configure Screenshots output path");
+  console.log("-v     Version");
+  console.log("-h     Help");
 
-    index.updateConfigInput(args.in);
-  }
-  if (args.out) {
-    index.updateConfigOutput(args.out);
-  }
-  if (args.c) {
-    index.showConfigPrintout();
-  }
-  //Place this last to ensure configs are set first if present
-  if (args.ios) {
-    index.generateNewScreeshots("ios");
+  return console.log();
+};
+var printVersion = function () {
+  return console.log("1.0.0");
+};
+getOptionSelection(args);
 
-  }
-  if (args.android) {
-    index.generateNewScreeshots("android");
-  }
+function getOptionSelection(args) {
+  if (args.v || args.h || args.in || args.out || args.c || args.g || args.android || args.ios) {
+    if (args.v) {
+      printVersion();
+    }
+    if (args.h) {
+      printHelp();
+    }
+    if (args.in) {
 
-} else {
-  console.log("No options selected!");
-  functionsLibrary.printHelp();
+      index.updateConfigInput(args.in);
+    }
+    if (args.out) {
+      index.updateConfigOutput(args.out);
+    }
+    if (args.c) {
+      index.showConfigPrintout();
+    }
+    //Place this last to ensure configs are set first if present
+    if (args.i) {
+      index.generateNewScreeshots("ios");
+
+    }
+    if (args.a) {
+      index.generateNewScreeshots("android");
+    }
+
+  } else {
+    console.log("No options selected!");
+    printHelp();
+  }
 }
