@@ -2,10 +2,10 @@
     "compilerOptions": {
         "target":"esnext",
         "watch": false,
-        "outDir": "dist"
+        "outDir": ""
     },
     "include": [
-       "ts/*.ts"
+       "ts/*/*.ts"
       ],
       "exclude": [
         "node_modules"

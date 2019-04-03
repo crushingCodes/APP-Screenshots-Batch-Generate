@@ -162,7 +162,7 @@ async function getUserAnswer(question) {
     });
     return response.value;
 }
-var generateNewScreeshots = async function () {
+var generateNewScreeshots = async function (platform) {
     //Check for loaded config and user confirmation
     if (loadConfig()) {
         if (await getUserAnswer("Do you want to continue and override files in " + outputFolder)) {
