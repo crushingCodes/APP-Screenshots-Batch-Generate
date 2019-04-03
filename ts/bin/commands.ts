@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 let minimist = require('minimist')
 let functionsLibrary = require('../dist/helper-functions.js');
-let index = require('../dist/index.js');
+//let index = require('../dist/index.js');
 
-import { Platform } from "../dist/index";
-
-
+import {ScreenshotGenerator} from "../dist/index";
+let index = new ScreenshotGenerator();
 // let args = minimist(process.argv.slice(2), {
 //   string: 'in',
 //   string: 'out',
@@ -23,7 +22,7 @@ let args = minimist(process.argv.slice(2), {
   })
 
 //console.log(args);
-if(args.v || args.h || args.in  || args.out || args.c || args.g){
+if(args.v || args.h || args.in  || args.out || args.c || args.g || args.android || args.ios){
 if (args.v) {
   functionsLibrary.printVersion();
 }
@@ -31,6 +30,7 @@ if (args.h) {
   functionsLibrary.printHelp();
 }
 if (args.in) {
+
   index.updateConfigInput(args.in);
 }
 if (args.out) {
@@ -41,21 +41,17 @@ if (args.c) {
 }
 //Place this last to ensure configs are set first if present
 if (args.ios) {
-  index.generateNewScreeshots();
+  index.generateNewScreeshots("ios");
   
 }
 if (args.android) {
-  index.generateNewScreeshots();
+  index.generateNewScreeshots("android");
 }
-if (args.g) {
-  index.generateNewScreeshots();
-}
+// if (args.g) {
+//   index.generateNewScreeshots();
+// }
 
 }else{
   console.log("No options selected!");
   functionsLibrary.printHelp();
-}
-getPlatform("android");
-function getPlatform(plat:Platform){
-
 }
