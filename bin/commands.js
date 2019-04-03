@@ -7,12 +7,11 @@ const { yellow, blue, bold } = require('kleur');
 let index = new index_1.ScreenshotGenerator();
 const minimistOptions = {
     string: ['in', 'out'],
-    boolean: ['version', 'generate', 'config', 'android', 'ios'],
-    alias: { h: 'help', g: 'generate', v: 'version', c: 'config', a: 'android', i: 'ios' },
+    boolean: ['version', 'config', 'android', 'ios'],
+    alias: { h: 'help', v: 'version', c: 'config', a: 'android', i: 'ios' },
 };
 let args = minimist(process.argv.slice(2), minimistOptions);
 var printHelp = function () {
-    console.log();
     console.log(bold().blue("App Generate Screenshots "));
     console.log();
     console.log("Type ", yellow("app-g-screenshots"), " followed by the options below:");

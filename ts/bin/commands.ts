@@ -7,8 +7,8 @@ let index = new ScreenshotGenerator();
 
 const minimistOptions = {
   string: ['in', 'out'],
-  boolean: ['version', 'generate', 'config', 'android', 'ios'],
-  alias: { h: 'help', g: 'generate', v: 'version', c: 'config', a: 'android', i: 'ios' },
+  boolean: ['version', 'config', 'android', 'ios'],
+  alias: { h: 'help', v: 'version', c: 'config', a: 'android', i: 'ios' },
 };
 let args = minimist(process.argv.slice(2), minimistOptions)
 

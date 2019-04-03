@@ -29,7 +29,7 @@ class ScreenshotGenerator {
     inputFolder: string;
     newImagesObj: ImagesObject = {};
     constructor() {
-    //Constructor
+        //Constructor
     }
 
     initConfig() {
@@ -202,11 +202,12 @@ class ScreenshotGenerator {
                             console.log("Processing: ", inpImgPath);
                             count += 1;
                             for (let profileSizeName in sizeProfiles) {
-
-                                this.newImagesObj[fName] = {
-                                    dimensions: this.getInputDimensions(inpImgPath), fPath: inpImgPath
-                                };
-                                this.processImage(fName, profileSizeName);
+                                if (sizeProfiles[profileSizeName].platform == platform) {
+                                    this.newImagesObj[fName] = {
+                                        dimensions: this.getInputDimensions(inpImgPath), fPath: inpImgPath
+                                    };
+                                    this.processImage(fName, profileSizeName);
+                                }
                             }
                         }
                     });
