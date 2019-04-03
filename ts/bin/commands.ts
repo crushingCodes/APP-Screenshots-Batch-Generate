@@ -8,7 +8,7 @@ let index = new ScreenshotGenerator();
 const minimistOptions = {
   string: ['in', 'out'],
   boolean: ['version', 'config', 'android', 'ios'],
-  alias: { h: 'help', v: 'version', c: 'config', a: 'android', i: 'ios' },
+  alias: { h: 'help', v: 'version', c: 'config'},
 };
 let args = minimist(process.argv.slice(2), minimistOptions)
 
@@ -16,13 +16,13 @@ var printHelp = function () {
   console.log(bold().blue("App Generate Screenshots "));
   console.log();
   console.log("Type ", yellow("app-g-screenshots"), " followed by the options below:");
-  console.log("-a     Generate Android Screenshot Sizes");
-  console.log("-i     Generate iOS Screenshot Sizes");
-  console.log("-c     View Configuration");
-  console.log("--in   Configure screenshots input path");
-  console.log("--out  Configure Screenshots output path");
-  console.log("-v     Version");
-  console.log("-h     Help");
+  console.log("--android  Generate Android Screenshot Sizes");
+  console.log("--ios      Generate iOS Screenshot Sizes");
+  console.log("-c         View Configuration");
+  console.log("--in       Configure screenshots input path");
+  console.log("--out      Configure Screenshots output path");
+  console.log("-v         Version");
+  console.log("-h         Help");
 
   return console.log();
 };
