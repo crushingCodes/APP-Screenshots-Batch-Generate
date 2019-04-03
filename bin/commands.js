@@ -8,28 +8,28 @@ let index = new index_1.ScreenshotGenerator();
 const minimistOptions = {
     string: ['in', 'out'],
     boolean: ['version', 'config', 'android', 'ios'],
-    alias: { h: 'help', v: 'version', c: 'config', a: 'android', i: 'ios' },
+    alias: { h: 'help', v: 'version', c: 'config' },
 };
 let args = minimist(process.argv.slice(2), minimistOptions);
 var printHelp = function () {
     console.log(bold().blue("App Generate Screenshots "));
     console.log();
     console.log("Type ", yellow("app-g-screenshots"), " followed by the options below:");
-    console.log("-a     Generate Android Screenshot Sizes");
-    console.log("-i     Generate iOS Screenshot Sizes");
-    console.log("-c     View Configuration");
-    console.log("--in   Configure screenshots input path");
-    console.log("--out  Configure Screenshots output path");
-    console.log("-v     Version");
-    console.log("-h     Help");
+    console.log("--android  Generate Android Screenshot Sizes");
+    console.log("--ios      Generate iOS Screenshot Sizes");
+    console.log("--in       Configure screenshots input path");
+    console.log("--out      Configure Screenshots output path");
+    console.log("-c         View Configuration");
+    console.log("-v         Version");
+    console.log("-h         Help");
     return console.log();
 };
 var printVersion = function () {
-    return console.log("1.0.0");
+    return console.log("1.0.1");
 };
 getOptionSelection(args);
 function getOptionSelection(args) {
-    if (args.v || args.h || args.in || args.out || args.c || args.g || args.android || args.ios) {
+    if (args.v || args.h || args.in || args.out || args.c || args.android || args.ios) {
         if (args.v) {
             printVersion();
         }
@@ -46,10 +46,10 @@ function getOptionSelection(args) {
             index.showConfigPrintout();
         }
         //Place this last to ensure configs are set first if present
-        if (args.i) {
+        if (args.ios) {
             index.generateNewScreeshots("ios");
         }
-        if (args.a) {
+        if (args.android) {
             index.generateNewScreeshots("android");
         }
     }
