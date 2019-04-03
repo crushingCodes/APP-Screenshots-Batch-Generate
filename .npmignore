@@ -1,0 +1,12 @@
+web-app/
+temp/*
+temp/
+screensOut
+screensIn
+screensOut/*
+screensIn/*
+*.tmp
+ts/
+*.tgz
+package/
+bin/app-g-build-silent.js
