@@ -19,8 +19,6 @@ const sizeOf = require('image-size');
 const unixify = require('unixify');
 const { red, yellow, bold } = require('kleur');
 //Const Variables
-const android = 'android';
-const ios = 'ios';
 const sizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "12.9": { dimensions: { longLength: 2732, shortLength: 2048 }, platform: "ios" },
@@ -134,7 +132,7 @@ class ScreenshotGenerator {
             return true;
         }
         else {
-            console.error(bold().red("Error:"), validatedPath, " was not a valid path;");
+            this.printError(validatedPath + " was not a valid path.");
             return false;
         }
     }
@@ -155,12 +153,12 @@ class ScreenshotGenerator {
             console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
         }
         else {
-            console.error(bold().red("Error:"), " The path entered for ", fPath, " was not a directory.");
+            this.printError(" The path entered for " + fPath + " was not a directory.");
         }
         return folderPath;
     }
     folderError(folderName) {
-        console.error(bold().red("Error:"), folderName, " not configured! Please type -h to find instructions.");
+        this.printError(folderName + " not configured! Please type -h to find instructions.");
     }
     updateConfigByConfigKey(configKey, inputPath) {
         if (this.checkPath(configKey, inputPath)) {
@@ -223,6 +221,9 @@ class ScreenshotGenerator {
                 fs.writeFileSync(fileFullPath, buf);
             });
         });
+    }
+    printError(message) {
+        console.error(red().bold("Error: "), message);
     }
 }
 exports.ScreenshotGenerator = ScreenshotGenerator;

@@ -12,8 +12,6 @@ const unixify = require('unixify');
 const { red, yellow, bold } = require('kleur');
 
 //Const Variables
-const android: Platform = 'android';
-const ios: Platform = 'ios'
 const sizeProfiles: SizeProfiles = {
     "5.5": { dimensions: { longLength: 2208, shortLength: 1242 }, platform: "ios" },
     "12.9": { dimensions: { longLength: 2732, shortLength: 2048 }, platform: "ios" },
@@ -73,7 +71,7 @@ class ScreenshotGenerator {
         if (validatedPath) {
             return true;
         } else {
-            console.error(bold().red("Error:"), validatedPath, " was not a valid path;");
+            this.printError( validatedPath + " was not a valid path.");
             return false;
         }
     }
@@ -92,15 +90,16 @@ class ScreenshotGenerator {
         else if (fPath[fPath.length - 1] == '"') {
             //Fix the folder path for WINDOWS file path
             folderPath = fPath.replace('"', "/");
-            console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
+            console.log(yellow("NOTE: The path entered "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
         } else {
-            console.error(bold().red("Error:"), " The path entered for ", fPath, " was not a directory.");
+           this.printError(" The path entered " + fPath + " was not a directory.");
         }
         return folderPath;
     }
 
     folderError(folderName: FName) {
-        console.error(bold().red("Error:"), folderName, " not configured! Please type -h to find instructions.");
+
+        this.printError(folderName+ " not configured! Please type -h to find instructions.");
     }
 
     updateConfigByConfigKey(configKey, inputPath: FPath) {
@@ -227,12 +226,15 @@ class ScreenshotGenerator {
                     + "/" + profileSizeName;
                 fs.ensureDir(outImgPath, err => {
                     if (err) {
-                        console.log(err);
+                        this.printError(err);
                     }
                     let fileFullPath = outImgPath + "/" + fName;
                     fs.writeFileSync(fileFullPath, buf);
                 })
             });
+    }
+    printError(message:string){
+        console.error(red().bold("Error: "),message);
     }
 }
 
