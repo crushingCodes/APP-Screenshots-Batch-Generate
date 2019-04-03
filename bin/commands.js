@@ -19,7 +19,7 @@ let index = new index_1.ScreenshotGenerator();
 let args = minimist(process.argv.slice(2), {
     string: ['in', 'out'],
     boolean: ['version', 'generate', 'config', 'android', 'ios'],
-    alias: { h: 'help', g: 'generate', v: 'version', c: 'config' },
+    alias: { h: 'help', g: 'generate', v: 'version', c: 'config', android: 'android', ios: 'ios' },
 });
 //console.log(args);
 if (args.v || args.h || args.in || args.out || args.c || args.g || args.android || args.ios) {
