@@ -1,6 +1,6 @@
 {
   "name": "app-g-screenshots",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a new project built for the purpose of providing a quick method to generate images for the different sizes and orientations for major app platforms. The original version will run primarily as a web app using Javascript. NPM version is also functional as a global npm package download.",
   "main": "bin/index.js",
   "bin": {
@@ -34,5 +34,11 @@
   "devDependencies": {
     "@types/lodash": "^4.14.123"
   },
-  "keywords": ["screenshots","generate screenshots","app","application","application screenshots"]
+  "keywords": [
+    "screenshots",
+    "generate screenshots",
+    "app",
+    "application",
+    "application screenshots"
+  ]
 }
