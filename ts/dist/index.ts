@@ -71,7 +71,7 @@ class ScreenshotGenerator {
         if (validatedPath) {
             return true;
         } else {
-            this.printError( validatedPath + " was not a valid path.");
+            this.printError(validatedPath + " was not a valid path.");
             return false;
         }
     }
@@ -92,14 +92,14 @@ class ScreenshotGenerator {
             folderPath = fPath.replace('"', "/");
             console.log(yellow("NOTE: The path entered "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
         } else {
-           this.printError(" The path entered " + fPath + " was not a directory.");
+            this.printError(" The path entered " + fPath + " was not a directory.");
         }
         return folderPath;
     }
 
     folderError(folderName: FName) {
 
-        this.printError(folderName+ " not configured! Please type -h to find instructions.");
+        this.printError(folderName + " not configured! Please type -h to find instructions.");
     }
 
     updateConfigByConfigKey(configKey, inputPath: FPath) {
@@ -233,8 +233,8 @@ class ScreenshotGenerator {
                 })
             });
     }
-    printError(message:string){
-        console.error(red().bold("Error: "),message);
+    printError(message: string) {
+        console.error(red().bold("Error: "), message);
     }
 }
 
