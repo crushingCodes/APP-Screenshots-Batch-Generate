@@ -150,10 +150,10 @@ class ScreenshotGenerator {
         else if (fPath[fPath.length - 1] == '"') {
             //Fix the folder path for WINDOWS file path
             folderPath = fPath.replace('"', "/");
-            console.log(yellow("NOTE: The path entered for "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
+            console.log(yellow("NOTE: The path entered "), fPath, yellow(" did not have trailing /. Auto added '/' to prevent errors!"));
         }
         else {
-            this.printError(" The path entered for " + fPath + " was not a directory.");
+            this.printError(" The path entered " + fPath + " was not a directory.");
         }
         return folderPath;
     }
@@ -215,7 +215,7 @@ class ScreenshotGenerator {
                 + "/" + profileSizeName;
             fs.ensureDir(outImgPath, err => {
                 if (err) {
-                    console.log(err);
+                    this.printError(err);
                 }
                 let fileFullPath = outImgPath + "/" + fName;
                 fs.writeFileSync(fileFullPath, buf);
