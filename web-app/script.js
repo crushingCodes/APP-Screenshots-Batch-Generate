@@ -10,6 +10,7 @@ Object.freeze(orientation);
 //Preset Config sizes for regular and large screens for ios and android
 const sizeProfilesConfig = {
   "5.5": { sizeName: "5.5inch", pHeight: 2208, pWidth: 1242, lHeight: 1242, lWidth: 2208, platform: osTypes.ios },
+  "6.5": { sizeName: "6.5inch", pHeight: 2688, pWidth: 1242, lHeight: 1242, lWidth: 2688, platform: osTypes.ios },
   "10.5": { sizeName: "10.5inch", pHeight: 2224, pWidth: 1668, lHeight: 1668, lWidth: 2224, platform: osTypes.ios },
   "5.1": { sizeName: "5.1inch", pHeight: 1280, pWidth: 800, lHeight: 800, lWidth: 1280, platform: osTypes.android },
   "10": { sizeName: "10inch", pHeight: 2560, pWidth: 1700, lHeight: 1700, lWidth: 2560, platform: osTypes.android },
