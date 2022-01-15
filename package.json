@@ -27,7 +27,7 @@
     "minimist": "^1.2.5",
     "prompts": "^2.0.4",
     "resize-img": "^1.1.2",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "unixify": "^1.0.0",
     "valid-path": "^1.0.0"
   },
